@@ -10,6 +10,6 @@ private:
 public:
 	Lista();
 	void Insere(T* valor);
-	T* GetPrimeiro();
+	No<T>* GetPrimeiro();
 };
 

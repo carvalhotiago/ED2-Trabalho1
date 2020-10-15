@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Lista.h"
+#include "Book.h"
 
 template <typename T>
 Lista<T>::Lista()
@@ -26,7 +27,10 @@ void Lista<T>::Insere(T* valor)
 }
 
 template <typename T>
-T* Lista<T>::GetPrimeiro()
+No<T>* Lista<T>::GetPrimeiro()
 {
 	return this->primeiro;
 }
+
+template class Lista<int>;
+template class Lista<Book>;

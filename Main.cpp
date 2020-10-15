@@ -4,11 +4,9 @@
 #include "No.h"
 #include "Lista.h"
 
-
 using namespace std;
-template <typename T>
 
-void main()
+int main()
 {
 	ifstream arquivo;
 	arquivo.open("Data/authors-small.csv");
@@ -31,9 +29,11 @@ void main()
 
 	cout << "Programa encerrado com sucesso!" << endl;
 
-	int x = 3, y = 5, z = 9;
+	int x = 2;
+	int* px = &x;
 	Lista<int>* inteiros = new Lista<int>();
-	inteiros->Insere(x);
-	inteiros->Insere(y);
-	inteiros->Insere(z);
+	inteiros->Insere(px);
+
+
+	return 0;
 }

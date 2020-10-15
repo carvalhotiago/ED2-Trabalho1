@@ -1,5 +1,6 @@
 #include "No.h"
 #include <iostream>
+#include "Book.h"
 
 template <typename T>
 No<T>::No(T* valor)
@@ -25,3 +26,6 @@ T* No<T>::GetValor()
 {
 	return this->valor;
 }
+
+template class No<int>;
+template class No<Book>;

@@ -4,7 +4,7 @@ template <typename T>
 class No
 {
 private:
-	T valor;
+	T* valor;
 	No* proximo;
 
 public:
