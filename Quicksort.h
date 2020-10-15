@@ -1,5 +1,5 @@
-#ifndef QUICKSORT_H
-#define QUICKSORT_H
+#pragma once
+
 
 class Quicksort {
 public:
@@ -7,5 +7,3 @@ public:
 	int DivisaoQuickSort(int vetor[], int inicio, int size);
 	void QuickSort(int vetor[], int inicio, int fim);
 };
-
-#endif

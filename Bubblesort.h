@@ -2,7 +2,8 @@
 #define BUBBLESORT_H
 
 class Bubblesort {
-
+private:
+	int numeroDeComparacoes;
 public:
 	Bubblesort();
 

@@ -1,11 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "No.h"
+#include "Lista.h"
 
 
 using namespace std;
+template <typename T>
 
-int main()
+void main()
 {
 	ifstream arquivo;
 	arquivo.open("Data/authors-small.csv");
@@ -27,5 +30,10 @@ int main()
 	}
 
 	cout << "Programa encerrado com sucesso!" << endl;
-	return 0;
+
+	int x = 3, y = 5, z = 9;
+	Lista<int>* inteiros = new Lista<int>();
+	inteiros->Insere(x);
+	inteiros->Insere(y);
+	inteiros->Insere(z);
 }

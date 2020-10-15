@@ -5,7 +5,7 @@ using namespace std;
 
 Bubblesort::Bubblesort()
 {
-
+	numeroDeComparacoes = 0;
 }
 
 //
