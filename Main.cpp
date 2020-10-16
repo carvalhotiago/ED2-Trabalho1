@@ -9,13 +9,12 @@
 
 using namespace std;
 
-template <typename T>
-void PrintListOfBook(vector<T*> *books)
-{
-	cout << "authors: " << books->at(1).authors << endl;
-}
+//template <typename T>
+//void PrintListOfBook(vector<T*> *books)
+//{
+//	cout << "authors: " << books->at(1).authors << endl;
+//}
 
-template <typename T>
 int main()
 {
 	ifstream arquivo;
@@ -49,9 +48,10 @@ int main()
 				vBooks->push_back(book);
 			}			
 
-			if (cont < 1)
+			for (int i = 0; i < vBooks->size(); i++)
 			{
-					PrintListOfBook(vBooks);
+				cout << "authors: " << vBooks->at(i)->authors << endl;
+				cout << "bestsellersRank: " << vBooks->at(i)->bestsellersRank << endl;
 			}
 		}
 		arquivo.close();
