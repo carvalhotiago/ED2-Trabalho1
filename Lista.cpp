@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+
 #include "Lista.h"
 #include "Book.h"
 
@@ -32,19 +34,6 @@ No<T>* Lista<T>::GetPrimeiro()
 	return this->primeiro;
 }
 
-template <typename T>
-void Lista<T>::PrintListOfBook(Lista<T> books)
-{
-	No<T>* book = books.GetPrimeiro();
-
-	for (int i = 0; i < 10; i++)
-	{
-		T* value = book->GetValor();
-		if(value != NULL)
-			cout << value << endl;
-		book = book->GetProximo();
-	}
-}
 
 template class Lista<int>;
 template class Lista<Book>;

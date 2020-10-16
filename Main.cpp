@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 #include <string>
 #include "No.h"
 #include "Lista.h"
@@ -8,12 +9,20 @@
 
 using namespace std;
 
+template <typename T>
+void PrintListOfBook(vector<T*> *books)
+{
+	cout << "authors: " << books->at(1).authors << endl;
+}
+
+template <typename T>
 int main()
 {
 	ifstream arquivo;
 	arquivo.open("Data/authors-small.csv");
 	
 	Lista<Book> *books = new Lista<Book>;
+	vector<Book*>* vBooks = new vector<Book*>();
 	Lista<int> authorsIds;
 	int cont = 0;
 
@@ -36,12 +45,13 @@ int main()
 				getline(ss, book->ratingAvg, ',');
 				getline(ss, book->ratingCount, ',');
 				getline(ss, book->title, ',');
-				books->Insere(book);				
+				books->Insere(book);
+				vBooks->push_back(book);
 			}			
 
 			if (cont < 1)
 			{
-				books->PrintListOfBook(*books);
+					PrintListOfBook(vBooks);
 			}
 		}
 		arquivo.close();
@@ -53,12 +63,6 @@ int main()
 	}
 
 	cout << "Programa encerrado com sucesso!" << endl;
-
-	int x = 2;
-	int* px = &x;
-	Lista<int>* inteiros = new Lista<int>();
-	inteiros->Insere(px);
-
 
 	return 0;
 }
