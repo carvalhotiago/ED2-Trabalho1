@@ -16,6 +16,14 @@ void PrintListOfBook(vector<T*>* books)
 	{
 		cout << "authors: " << books->at(i)->authors << endl;
 		cout << "bestsellersRank: " << books->at(i)->bestsellersRank << endl;
+		cout << "categories: " << books->at(i)->categories << endl;
+		cout << "edition: " << books->at(i)->edition << endl;
+		cout << "id: " << books->at(i)->id << endl;
+		cout << "isbn10: " << books->at(i)->isbn10 << endl;
+		cout << "isbn13: " << books->at(i)->isbn13 << endl;
+		cout << "ratingAvg: " << books->at(i)->ratingAvg << endl;
+		cout << "ratingCount: " << books->at(i)->ratingCount << endl;
+		cout << "title: " << books->at(i)->title << endl;
 	}
 }
 
