@@ -11,5 +11,6 @@ public:
 	Lista();
 	void Insere(T* valor);
 	No<T>* GetPrimeiro();
+	void PrintListOfBook(Lista<T> books);
 };
 
