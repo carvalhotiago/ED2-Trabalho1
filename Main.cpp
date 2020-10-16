@@ -9,18 +9,21 @@
 
 using namespace std;
 
-//template <typename T>
-//void PrintListOfBook(vector<T*> *books)
-//{
-//	cout << "authors: " << books->at(1).authors << endl;
-//}
+template <typename T>
+void PrintListOfBook(vector<T*>* books)
+{
+	for (int i = 0; i < books->size(); i++)
+	{
+		cout << "authors: " << books->at(i)->authors << endl;
+		cout << "bestsellersRank: " << books->at(i)->bestsellersRank << endl;
+	}
+}
 
 int main()
 {
 	ifstream arquivo;
-	arquivo.open("Data/authors-small.csv");
+	arquivo.open("Data/authors-small.csv");	
 	
-	Lista<Book> *books = new Lista<Book>;
 	vector<Book*>* vBooks = new vector<Book*>();
 	Lista<int> authorsIds;
 	int cont = 0;
@@ -44,15 +47,10 @@ int main()
 				getline(ss, book->ratingAvg, ',');
 				getline(ss, book->ratingCount, ',');
 				getline(ss, book->title, ',');
-				books->Insere(book);
 				vBooks->push_back(book);
 			}			
 
-			for (int i = 0; i < vBooks->size(); i++)
-			{
-				cout << "authors: " << vBooks->at(i)->authors << endl;
-				cout << "bestsellersRank: " << vBooks->at(i)->bestsellersRank << endl;
-			}
+			PrintListOfBook(vBooks);
 		}
 		arquivo.close();
 	}
