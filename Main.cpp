@@ -34,13 +34,22 @@ string formatadorDeString(int indice, int inicio, int fim, vector<string> *regis
 	return text;
 }
 
+vector<int>* stringToIntArray(string str) {
+	vector<int> *array = new vector<int>;
+	for (int i = 0; i < str.length(); i++) {
+		array->push_back(str[i] - '0');
+	}
+	return array;
+}
+
+
 int main()
 {
 	int N = 10; //numero de linhas aleatorias a serem capturadas
 	srand(time(NULL));
 
 	ifstream arquivo;
-	arquivo.open("Data/small-teste.csv");
+	arquivo.open("Data/teste.txt");
 
 	vector<Book*>* vBooks1 = new vector<Book*>();
 	vector<Book*>* vBooks2 = new vector<Book*>();
@@ -52,9 +61,6 @@ int main()
 	int cont = 0;
 
 	regex regex("\s*(\"[^\"]*\")");
-
-	/*test.erase(0, 1);
-	test.erase(test.size() - 1);*/
 
 	if (arquivo.is_open())
 	{
@@ -97,9 +103,9 @@ int main()
 					iterator++;
 				}
 
-				book->authors = formatadorDeString(0, 1, 2, registro);
-				book->bestsellersRank = registro->at(1);
-				book->categories = formatadorDeString(2, 1, 2, registro);
+				book->authors = stringToIntArray(formatadorDeString(0, 1, 2, registro));
+				book->bestsellersRank = registro->at(1);				
+				book->categories = registro->at(2);
 				book->edition = registro->at(3);
 				book->id = registro->at(4);
 				book->isbn10 = registro->at(5);
