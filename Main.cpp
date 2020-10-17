@@ -36,8 +36,11 @@ string formatadorDeString(int indice, int inicio, int fim, vector<string> *regis
 
 int main()
 {
+	int N = 10; //numero de linhas aleatorias a serem trabalhadas
+	srand(time(NULL));
+
 	ifstream arquivo;
-	arquivo.open("Data/teste.txt");
+	arquivo.open("Data/small-teste.csv");
 
 	vector<Book*>* vBooks = new vector<Book*>();
 	Lista<int> authorsIds;
@@ -52,14 +55,19 @@ int main()
 	{
 		// Guarda tamanho do arquivo em bytes
 		arquivo.seekg(0, arquivo.end);
-		int length = arquivo.tellg();
+		int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
 
-		while (!arquivo.eof())
+		//while (!arquivo.eof())
+		for (int i = 0; i < N; i++)
 		{
+			//Pega a linha correspondente a um byte aleatorio
+			int byteAleatorio = rand() % (tamanhoDoArquivo);
+			arquivo.seekg(byteAleatorio);
+
 			string str;
-			while (getline(arquivo, str))
-			{
+			getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
+			
 				Book* book = new Book();
 				stringstream ss(str);
 
@@ -91,7 +99,7 @@ int main()
 				book->title = registro->at(9);
 
 				vBooks->push_back(book);
-			}
+			
 
 			PrintListOfBook(vBooks);
 		}
