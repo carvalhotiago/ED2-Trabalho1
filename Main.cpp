@@ -34,13 +34,21 @@ string formatadorDeString(int indice, int inicio, int fim, vector<string> *regis
 	return text;
 }
 
+vector<int>* stringToIntArray(string str) {
+	vector<int> *array = new vector<int>;
+	for (int i = 0; i < str.length(); i++) {
+		array->push_back(str[i] - '0');
+	}
+	return array;
+}
+
+
 int main()
 {
 	ifstream arquivo;
 	arquivo.open("Data/teste.txt");
 
 	vector<Book*>* vBooks = new vector<Book*>();
-	Lista<int> authorsIds;
 	int cont = 0;
 
 	regex regex("\s*(\"[^\"]*\")");
@@ -74,7 +82,7 @@ int main()
 					iterator++;
 				}			
 
-				book->authors = formatadorDeString(0, 1, 2, registro);
+				book->authors = stringToIntArray(formatadorDeString(0, 1, 2, registro));
 				book->bestsellersRank = registro->at(1);				
 				book->categories = formatadorDeString(2, 1, 2, registro);
 				book->edition = registro->at(3);

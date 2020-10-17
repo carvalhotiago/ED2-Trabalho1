@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -7,7 +8,7 @@ class Book
 {
 public:
     Book();
-    string authors;
+    vector<int>* authors;
     string bestsellersRank;
     string categories;
     string edition;
