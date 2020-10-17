@@ -36,13 +36,18 @@ string formatadorDeString(int indice, int inicio, int fim, vector<string> *regis
 
 int main()
 {
-	int N = 10; //numero de linhas aleatorias a serem trabalhadas
+	int N = 10; //numero de linhas aleatorias a serem capturadas
 	srand(time(NULL));
 
 	ifstream arquivo;
 	arquivo.open("Data/small-teste.csv");
 
-	vector<Book*>* vBooks = new vector<Book*>();
+	vector<Book*>* vBooks1 = new vector<Book*>();
+	vector<Book*>* vBooks2 = new vector<Book*>();
+	vector<Book*>* vBooks3 = new vector<Book*>();
+	vector<Book*>* vBooks4 = new vector<Book*>();
+	vector<Book*>* vBooks5 = new vector<Book*>();
+
 	Lista<int> authorsIds;
 	int cont = 0;
 
@@ -58,20 +63,25 @@ int main()
 		int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
 
-		//while (!arquivo.eof())
-		for (int i = 0; i < N; i++)
+		//Colocar os 5 grupos de conjuntos aleatórios dentro de um vetor só, pra depois repartir esse vetor em 5 vetores de tamanhos iguais
+		for (int j = 0; j < 5; j++)
 		{
-			//Pega a linha correspondente a um byte aleatorio
-			int byteAleatorio = rand() % (tamanhoDoArquivo);
-			arquivo.seekg(byteAleatorio);
+			for (int i = 0; i < N; i++)
+			{
+				//Pega a linha correspondente a um byte aleatorio
+				int byteAleatorio = rand() % (tamanhoDoArquivo);
+				arquivo.seekg(byteAleatorio);
 
-			string str;
-			getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
-			
+				//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
+				string dump;
+				string str;
+				getline(arquivo, dump);
+				getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
+
 				Book* book = new Book();
 				stringstream ss(str);
 
-				sregex_iterator iterator(str.begin(), str.end(),regex);
+				sregex_iterator iterator(str.begin(), str.end(), regex);
 				vector<string>* registro = new vector<string>;
 				sregex_iterator end;
 
@@ -80,15 +90,15 @@ int main()
 					for (unsigned i = 0; i < iterator->size() - 1; i++)
 					{
 						string input;
-						getline((stringstream)(*iterator)[i], input);	
+						getline((stringstream)(*iterator)[i], input);
 						input = input.substr(1, input.size() - 2);
 						registro->push_back(input);
 					}
 					iterator++;
-				}			
+				}
 
 				book->authors = formatadorDeString(0, 1, 2, registro);
-				book->bestsellersRank = registro->at(1);				
+				book->bestsellersRank = registro->at(1);
 				book->categories = formatadorDeString(2, 1, 2, registro);
 				book->edition = registro->at(3);
 				book->id = registro->at(4);
@@ -98,11 +108,39 @@ int main()
 				book->ratingCount = registro->at(8);
 				book->title = registro->at(9);
 
-				vBooks->push_back(book);
-			
+				switch (j)
+				{
+					case 0:
+						vBooks1->push_back(book);
+						break;
+					case 1:
+						vBooks2->push_back(book);
+						break;
+					case 2:
+						vBooks3->push_back(book);
+						break;
+					case 3:
+						vBooks4->push_back(book);
+						break;
+					case 4:
+						vBooks5->push_back(book);
+						break;
+					default:
+						break;	
+				}
 
-			PrintListOfBook(vBooks);
+				arquivo.seekg(0, arquivo.beg);
+			}
+
 		}
+
+		cout << "tamanho dos vetores: " << vBooks1->size() << endl;
+		cout << "tamanho dos vetores: " << vBooks2->size() << endl;
+		cout << "tamanho dos vetores: " << vBooks3->size() << endl;
+		cout << "tamanho dos vetores: " << vBooks4->size() << endl;
+		cout << "tamanho dos vetores: " << vBooks5->size() << endl;
+
+		//PrintListOfBook(vBooks);
 		arquivo.close();
 	}
 	else
