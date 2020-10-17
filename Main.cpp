@@ -28,6 +28,12 @@ void PrintListOfBook(vector<T*>* books)
 	}
 }
 
+string formatadorDeString(int indice, int inicio, int fim, vector<string> *registro)
+{
+	string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
+	return text;
+}
+
 int main()
 {
 	ifstream arquivo;
@@ -57,31 +63,32 @@ int main()
 				Book* book = new Book();
 				stringstream ss(str);
 
-				sregex_iterator iterator(str.begin(), str.end(), regex);
-				vector<string>* teste = new vector<string>;
+				sregex_iterator iterator(str.begin(), str.end(),regex);
+				vector<string>* registro = new vector<string>;
 				sregex_iterator end;
 
 				while (iterator != end)
 				{
-					for (unsigned i = 0; i < iterator->size(); i++)
+					for (unsigned i = 0; i < iterator->size() - 1; i++)
 					{
-						string a;
-						getline((stringstream)(*iterator)[i], a);
-						teste->push_back(a);
+						string input;
+						getline((stringstream)(*iterator)[i], input);	
+						input = input.substr(1, input.size() - 2);
+						registro->push_back(input);
 					}
 					iterator++;
-				}
+				}			
 
-				book->authors = teste->at(0);
-				book->bestsellersRank = teste->at(1);
-				book->categories = teste->at(2);
-				book->edition = teste->at(3);
-				book->id = teste->at(4);
-				book->isbn10 = teste->at(5);
-				book->isbn13 = teste->at(6);
-				book->ratingAvg = teste->at(7);
-				book->ratingCount = teste->at(8);
-				book->title = teste->at(9);
+				book->authors = formatadorDeString(0, 1, 2, registro);
+				book->bestsellersRank = registro->at(1);				
+				book->categories = formatadorDeString(2, 1, 2, registro);
+				book->edition = registro->at(3);
+				book->id = registro->at(4);
+				book->isbn10 = registro->at(5);
+				book->isbn13 = registro->at(6);
+				book->ratingAvg = registro->at(7);
+				book->ratingCount = registro->at(8);
+				book->title = registro->at(9);
 
 				vBooks->push_back(book);
 			}
