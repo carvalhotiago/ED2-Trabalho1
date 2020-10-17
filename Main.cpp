@@ -45,11 +45,24 @@ vector<int>* stringToIntArray(string str) {
 
 int main()
 {
-	int N = 10; //numero de linhas aleatorias a serem capturadas
+	int N; //numero de linhas aleatorias a serem capturadas
 	srand(time(NULL));
 
+	ifstream entrada;
+	entrada.open("entrada.txt");
+	int numeroDeEntradas;
+	entrada >> numeroDeEntradas;
+	vector<int> valoresDeN;
+
+	string str;
+	string x;
+	getline(entrada, x);
+	while (getline(entrada, str)) {
+		valoresDeN.push_back(stoi(str));
+	}
+
 	ifstream arquivo;
-	arquivo.open("Data/teste.txt");
+	arquivo.open("Data/small-teste.csv");
 
 	vector<Book*>* vBooks1 = new vector<Book*>();
 	vector<Book*>* vBooks2 = new vector<Book*>();
@@ -72,7 +85,7 @@ int main()
 		//Colocar os 5 grupos de conjuntos aleatórios dentro de um vetor só, pra depois repartir esse vetor em 5 vetores de tamanhos iguais
 		for (int j = 0; j < 5; j++)
 		{
-			for (int i = 0; i < N; i++)
+			for (int i = 0; i < valoresDeN.at(0); i++) // falta fazer a lógica para diferentes valores de N
 			{
 				//Pega a linha correspondente a um byte aleatorio
 				int byteAleatorio = rand() % (tamanhoDoArquivo);
