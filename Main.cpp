@@ -44,6 +44,11 @@ int main()
 
 	if (arquivo.is_open())
 	{
+		// Guarda tamanho do arquivo em bytes
+		arquivo.seekg(0, arquivo.end);
+		int length = arquivo.tellg();
+		arquivo.seekg(0, arquivo.beg);
+
 		while (!arquivo.eof())
 		{
 			string str;
