@@ -82,7 +82,6 @@ int main()
 		int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
 
-		//Colocar os 5 grupos de conjuntos aleatórios dentro de um vetor só, pra depois repartir esse vetor em 5 vetores de tamanhos iguais
 		for (int j = 0; j < 5; j++)
 		{
 			for (int i = 0; i < valoresDeN.at(0); i++) // falta fazer a lógica para diferentes valores de N
