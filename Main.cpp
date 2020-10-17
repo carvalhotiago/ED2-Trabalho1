@@ -13,35 +13,46 @@ using namespace std;
 template <typename T>
 void PrintListOfBook(vector<T*>* books)
 {
-	for (int i = 0; i < books->size(); i++)
+	for (int i = 0; i < books->size() - 1; i++)
 	{
-		cout << "authors: " << books->at(i)->authors << endl;
-		cout << "bestsellersRank: " << books->at(i)->bestsellersRank << endl;
-		cout << "categories: " << books->at(i)->categories << endl;
-		cout << "edition: " << books->at(i)->edition << endl;
-		cout << "id: " << books->at(i)->id << endl;
-		cout << "isbn10: " << books->at(i)->isbn10 << endl;
-		cout << "isbn13: " << books->at(i)->isbn13 << endl;
-		cout << "ratingAvg: " << books->at(i)->ratingAvg << endl;
-		cout << "ratingCount: " << books->at(i)->ratingCount << endl;
-		cout << "title: " << books->at(i)->title << endl;
+		//Book* book = books->at(i);
+		////for (unsigned j = 0; j < books->at(i)->authors->size(); j++)
+		//cout << "authors: " << book->authors->at(0) << endl;
+		//cout << "bestsellersRank: " << book->bestsellersRank << endl;
+		//cout << "categories: " << book->categories << endl;
+		//cout << "edition: " << book->edition << endl;
+		//cout << "id: " << book->id << endl;
+		//cout << "isbn10: " << book->isbn10 << endl;
+		//cout << "isbn13: " << book->isbn13 << endl;
+		//cout << "ratingAvg: " << book->ratingAvg << endl;
+		//cout << "ratingCount: " << book->ratingCount << endl;
+		//cout << "title: " << book->title << endl;
 	}
 }
 
-string formatadorDeString(int indice, int inicio, int fim, vector<string> *registro)
+vector<int>* formatadorDeString(int indice, int inicio, int fim, vector<string>* registro)
 {
-	string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
-	return text;
+	string text = registro->at(indice) = registro->at(indice).substr(inicio, registro->at(fim).size() - fim);
+
+	stringstream iss(text);
+
+	int number;
+	vector<int> myNumbers;
+	while (iss >> number)
+		myNumbers.push_back(number);
+
+	return &myNumbers;
 }
 
-vector<int>* stringToIntArray(string str) {
-	vector<int> *array = new vector<int>;
-	for (int i = 0; i < str.length(); i++) {
-		array->push_back(str[i] - '0');
+vector<int> split(const string& s, char delimiter) {
+	vector<int> tokens;
+	string token;
+	istringstream tokenStream(s);
+	while (getline(tokenStream, token, delimiter)) {
+		tokens.push_back(stoi(token));
 	}
-	return array;
+	return tokens;
 }
-
 
 int main()
 {
@@ -58,53 +69,76 @@ int main()
 
 	if (arquivo.is_open())
 	{
-		// Guarda tamanho do arquivo em bytes
+		//// Guarda tamanho do arquivo em bytes
 		arquivo.seekg(0, arquivo.end);
 		int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
 
 		//while (!arquivo.eof())
-		for (int i = 0; i < N; i++)
+		for (unsigned i = 0; i < N; i++)
 		{
-			//Pega a linha correspondente a um byte aleatorio
+			// Pega a linha correspondente a um byte aleatorio
+			srand(time(NULL) + rand());
 			int byteAleatorio = rand() % (tamanhoDoArquivo);
 			arquivo.seekg(byteAleatorio);
 
 			string str;
 			getline(arquivo, str);
 			getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
-			
-				Book* book = new Book();
-				stringstream ss(str);
 
-				sregex_iterator iterator(str.begin(), str.end(),regex);
-				vector<string>* registro = new vector<string>;
-				sregex_iterator end;
+			Book* book = new Book();
+			stringstream ss(str);
 
-				while (iterator != end)
+			sregex_iterator iterator(str.begin(), str.end(), regex);
+			vector<string>* registro = new vector<string>;
+			sregex_iterator end;
+
+			while (iterator != end)
+			{
+				for (unsigned i = 0; i < iterator->size() - 1; i++)
 				{
-					for (unsigned i = 0; i < iterator->size() - 1; i++)
-					{
-						string input;
-						getline((stringstream)(*iterator)[i], input);	
-						input = input.substr(1, input.size() - 2);
-						registro->push_back(input);
-					}
-					iterator++;
-				}			
+					string input;
+					getline((stringstream)(*iterator)[i], input);
+					input = input.substr(1, input.size() - 2);
+					registro->push_back(input);
+				}
+				iterator++;
+			}			
 
-				book->authors = stringToIntArray(formatadorDeString(0, 1, 2, registro));
-				book->bestsellersRank = registro->at(1);				
-				book->categories = registro->at(2);
-				book->edition = registro->at(3);
-				book->id = registro->at(4);
-				book->isbn10 = registro->at(5);
-				book->isbn13 = registro->at(6);
-				book->ratingAvg = registro->at(7);
-				book->ratingCount = registro->at(8);
-				book->title = registro->at(9);
+			string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
+			stringstream iss(text);
+			vector<int> authorsIds = split(text, ',');			
+			text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
+			vector<int> categories = split(text, ',');
+		
+			book->authors = &authorsIds;
+			book->bestsellersRank = registro->at(1);
+			book->categories = &categories;
+			book->edition = registro->at(3);
+			book->id = registro->at(4);
+			book->isbn10 = registro->at(5);
+			book->isbn13 = registro->at(6);
+			book->ratingAvg = registro->at(7);
+			book->ratingCount = registro->at(8);
+			book->title = registro->at(9);
 
-				vBooks->push_back(book);	
+			//Book* book = books->at(i);
+			cout << "authors: ";
+			for (unsigned j = 0; j < book->authors->size(); j++)
+				cout << book->authors->at(j) << endl;;
+			cout << "bestsellersRank: " << book->bestsellersRank << endl;
+			cout << "categories: ";
+			for (unsigned k = 0; k < book->authors->size(); k++)
+				cout << book->categories->at(k) << endl;
+			cout << "edition: " << book->edition << endl;
+			cout << "id: " << book->id << endl;
+			cout << "isbn10: " << book->isbn10 << endl;
+			cout << "isbn13: " << book->isbn13 << endl;
+			cout << "ratingAvg: " << book->ratingAvg << endl;
+			cout << "ratingCount: " << book->ratingCount << endl;
+			cout << "title: " << book->title << endl;
+
+			vBooks->push_back(book);
 
 		}
 		PrintListOfBook(vBooks);

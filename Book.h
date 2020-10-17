@@ -10,7 +10,7 @@ public:
     Book();
     vector<int>* authors;
     string bestsellersRank;
-    string categories;
+    vector<int>* categories;
     string edition;
     string id;
     string isbn10;
