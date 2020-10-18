@@ -15,13 +15,13 @@ using namespace std;
 template <typename T>
 void PrintListOfBook(vector<T*>& books)
 {
-	for (int i = 0; i < books.size() - 1; i++)
+	for (int i = 0; i < books.size(); i++)
 	{
 		Book* book = books.at(i);
-		for (unsigned j = 0; j < book->authors->size() - 1; j++)
+		for (int j = 0; j < book->authors->size(); j++)
 			cout << "authors: " << book->authors->at(j) << endl;
 		cout << "bestsellersRank: " << book->bestsellersRank << endl;
-		for (unsigned k = 0; k < book->categories->size() - 1; k++)
+		for (int k = 0; k < book->categories->size(); k++)
 			cout << "categories: " << book->categories->at(k) << endl;
 		cout << "edition: " << book->edition << endl;
 		cout << "id: " << book->id << endl;
@@ -33,12 +33,23 @@ void PrintListOfBook(vector<T*>& books)
 	}
 }
 
-vector<int> split(const string& s, char delimiter) {
-	vector<int> tokens;
+template <typename T>
+void PrintBookTitles(vector<T*>& books)
+{
+	for (int i = 0; i < books.size(); i++)
+	{
+		Book* book = books.at(i);		
+		cout << book->title << endl;
+	}
+	cout << endl;
+}
+
+vector<int>* split(const string& s, char delimiter) {
+	vector<int>* tokens = new vector<int>;
 	string token;
 	istringstream tokenStream(s);
 	while (getline(tokenStream, token, delimiter)) {
-		tokens.push_back(stoi(token));
+		tokens->push_back(stoi(token));
 	}
 	return tokens;
 }
@@ -62,7 +73,7 @@ int main()
 	}
 
 	ifstream arquivo;
-	arquivo.open("Data/small-teste.csv");
+	arquivo.open("Data/teste.txt");
 
 	vector<Book*>* vBooks1 = new vector<Book*>();
 	vector<Book*>* vBooks2 = new vector<Book*>();
@@ -87,7 +98,7 @@ int main()
 		//while (!arquivo.eof())
 		for (unsigned j = 0; j < 5; j++)
 		{
-			for (int i = 0; i < 10; i++) // falta fazer a lógica para diferentes valores de N
+			for (int i = 0; i < 5; i++) // falta fazer a lógica para diferentes valores de N
 			{
 				// Pega a linha correspondente a um byte aleatorio
 				srand(time(NULL) + rand());
@@ -122,13 +133,13 @@ int main()
 				
 				string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);		
 				stringstream iss(text);
-				vector<int> authorsIds = split(text, ',');
+				vector<int>* authorsIds = split(text, ',');
 				text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
-				vector<int> categories = split(text, ',');
+				vector<int>* categories = split(text, ',');
 
-				book->authors = &authorsIds;
+				book->authors = authorsIds;
 				book->bestsellersRank = registro->at(1);
-				book->categories = &categories;
+				book->categories = categories;
 				book->edition = registro->at(3);
 				book->id = registro->at(4);
 				book->isbn10 = registro->at(5);
@@ -161,18 +172,14 @@ int main()
 		}
 
 		//Chama o BubbleSort e imprime o vetor de titulos ordenado
-		//Bubblesort bubble;
-		//bubble.BubbleSort(*vBooks1, vBooks1->size());
-		//for (unsigned j = 0; j < vBooks1->size(); j++)
-		//	cout << vBooks1->at(j)->title << endl;
-		//cout << endl;
+	/*	Bubblesort bubble;
+		bubble.BubbleSort(*vBooks1, vBooks1->size());
+		PrintBookTitles(*vBooks1);*/
 
-		////Chama o Quicksort e imprime o vetor de titulos ordenado
-		//Quicksort quick;
-		//quick.QuickSort(*vBooks1, 0, vBooks1->size());
-		//for (unsigned j = 0; j < vBooks1->size(); j++)
-		//	cout << vBooks1->at(j)->title << endl;
-		//cout << endl;
+		//Chama o Quicksort e imprime o vetor de titulos ordenado
+	/*	Quicksort quick;
+		quick.QuickSort(*vBooks1, 0, vBooks1->size());
+		PrintBookTitles(*vBooks1);*/
 
 		arquivo.seekg(0, arquivo.beg);
 
