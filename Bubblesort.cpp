@@ -8,25 +8,25 @@ Bubblesort::Bubblesort()
 	numeroDeComparacoes = 0;
 }
 
-//
-//void BubbleSort(ListaEncadeada Lista, int n)
-//{
-//	const clock_t t0 = clock();
-//	for (int i = 0; i < n - 1; i++)
-//	{
-//		for (int j = 0; j < n - i - 1; j++)
-//		{
-//			//numeroDeComparacoes++;
-//			if (Lista.at(j) > Lista.at(j + 1))
-//			{
-//				//numeroDeTrocas++;
-//				int aux = vec.at(j);
-//				vec.at(j) = vec.at(j + 1);
-//				vec.at(j + 1) = aux;
-//			}
-//
-//		}
-//	}
-//
-//	cout << "Tempo BubblerSort: " << float(clock() - t0) / CLOCKS_PER_SEC << endl;
-//}
+
+void Bubblesort::BubbleSort(vector<Book*> &books, int n)
+{
+	const clock_t t0 = clock();
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (long j = 0; j < n - i - 1; j++)
+		{
+			numeroDeComparacoes++;
+			if (books.at(j)->title > books.at(static_cast<long long>(j)+1)->title)
+			{
+				//numeroDeTrocas++;
+				string aux = books.at(j)->title;
+				books.at(j)->title = books.at(static_cast<long long>(j)+1)->title;
+				books.at(static_cast<long long>(j)+1)->title = aux;
+			}
+
+		}
+	}
+
+	cout << "Tempo BubblerSort: " << float(clock() - t0) / CLOCKS_PER_SEC << endl;
+}

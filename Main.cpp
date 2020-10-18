@@ -7,6 +7,8 @@
 #include "No.h"
 #include "Lista.h"
 #include "Book.h"
+#include "Bubblesort.h"
+#include "Quicksort.h"
 
 using namespace std;
 
@@ -96,7 +98,7 @@ int main()
 		//while (!arquivo.eof())
 		for (unsigned j = 0; j < 5; j++)
 		{
-			for (int i = 0; i < valoresDeN.at(0); i++) // falta fazer a lógica para diferentes valores de N
+			for (int i = 0; i < 10; i++) // falta fazer a lógica para diferentes valores de N
 			{
 				// Pega a linha correspondente a um byte aleatorio
 				srand(time(NULL) + rand());
@@ -166,25 +168,37 @@ int main()
 					break;
 				}
 
-				//Book* book = books->at(i);
-				cout << "authors: ";
-				for (unsigned j = 0; j < book->authors->size(); j++)
-					cout << book->authors->at(j) << endl;;
-				cout << "bestsellersRank: " << book->bestsellersRank << endl;
-				cout << "categories: ";
-				for (unsigned k = 0; k < book->authors->size(); k++)
-					cout << book->categories->at(k) << endl;
-				cout << "edition: " << book->edition << endl;
-				cout << "id: " << book->id << endl;
-				cout << "isbn10: " << book->isbn10 << endl;
-				cout << "isbn13: " << book->isbn13 << endl;
-				cout << "ratingAvg: " << book->ratingAvg << endl;
-				cout << "ratingCount: " << book->ratingCount << endl;
-				cout << "title: " << book->title << endl;
+				////Book* book = books->at(i);
+				//cout << "authors: ";
+				//for (unsigned j = 0; j < book->authors->size(); j++)
+				//	cout << book->authors->at(j) << endl;;
+				//cout << "bestsellersRank: " << book->bestsellersRank << endl;
+				//cout << "categories: ";
+				//for (unsigned k = 0; k < book->authors->size(); k++)
+				//	cout << book->categories->at(k) << endl;
+				//cout << "edition: " << book->edition << endl;
+				//cout << "id: " << book->id << endl;
+				//cout << "isbn10: " << book->isbn10 << endl;
+				//cout << "isbn13: " << book->isbn13 << endl;
+				//cout << "ratingAvg: " << book->ratingAvg << endl;
+				//cout << "ratingCount: " << book->ratingCount << endl;
+				//cout << "title: " << book->title << endl;
 			}
-
-			arquivo.seekg(0, arquivo.beg);			
 		}
+
+	/*	Bubblesort bubble;
+		bubble.BubbleSort(*vBooks1, vBooks1->size());
+		for (unsigned j = 0; j < vBooks1->size(); j++)
+			cout << vBooks1->at(j)->title << endl;
+		cout << endl;
+		arquivo.seekg(0, arquivo.beg);*/
+
+		Quicksort quick;
+		quick.QuickSort(*vBooks1, 0, vBooks1->size() - 1);
+		for (unsigned j = 0; j < vBooks1->size(); j++)
+			cout << vBooks1->at(j)->title << endl;
+		cout << endl;
+		arquivo.seekg(0, arquivo.beg);
 
 		cout << "tamanho dos vetores: " << vBooks1->size() << endl;
 		cout << "tamanho dos vetores: " << vBooks2->size() << endl;
