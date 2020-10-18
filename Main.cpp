@@ -60,7 +60,7 @@ int main()
 	srand(time(NULL));
 
 	ifstream entrada;
-	entrada.open("entrada.txt");
+	entrada.open("Data/entrada.txt");
 	int numeroDeEntradas;
 	entrada >> numeroDeEntradas;
 	vector<int> valoresDeN;
@@ -73,7 +73,7 @@ int main()
 	}
 
 	ifstream arquivo;
-	arquivo.open("Data/teste.txt");
+	arquivo.open("Data/small-teste.csv");
 
 	vector<Book*>* vBooks1 = new vector<Book*>();
 	vector<Book*>* vBooks2 = new vector<Book*>();
@@ -90,17 +90,20 @@ int main()
 	{
 		//// Guarda tamanho do arquivo em bytes
 		arquivo.seekg(0, arquivo.end);
-		int tamanhoDoArquivo = arquivo.tellg();
+		int tamanhoDoArquivo = arquivo.tellg(); 
 		arquivo.seekg(0, arquivo.beg);
+
+		cout << "Tamanho do arquivo: " << tamanhoDoArquivo << endl;
 
 		//while (!arquivo.eof())
 		for (unsigned j = 0; j < 5; j++)
 		{
-			for (int i = 0; i < valoresDeN.at(0); i++) // falta fazer a lógica para diferentes valores de N
+			for (int i = 0; i < 50; i++) // falta fazer a lógica para diferentes valores de N
 			{
 				// Pega a linha correspondente a um byte aleatorio
 				srand(time(NULL) + rand());
-				int byteAleatorio = rand() % (tamanhoDoArquivo);
+				int byteAleatorio = rand() % (tamanhoDoArquivo-500); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
+				cout << "byteAleatorio: " << byteAleatorio << endl;
 				arquivo.seekg(byteAleatorio);
 
 				//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
@@ -167,7 +170,7 @@ int main()
 				}
 
 				//Book* book = books->at(i);
-				cout << "authors: ";
+				/*cout << "authors: ";
 				for (unsigned j = 0; j < book->authors->size(); j++)
 					cout << book->authors->at(j) << endl;;
 				cout << "bestsellersRank: " << book->bestsellersRank << endl;
@@ -179,8 +182,10 @@ int main()
 				cout << "isbn10: " << book->isbn10 << endl;
 				cout << "isbn13: " << book->isbn13 << endl;
 				cout << "ratingAvg: " << book->ratingAvg << endl;
-				cout << "ratingCount: " << book->ratingCount << endl;
-				cout << "title: " << book->title << endl;
+				cout << "ratingCount: " << book->ratingCount << endl;*/
+				cout << i << " - title: " << book->title << endl;
+				cout << endl;
+
 			}
 
 			arquivo.seekg(0, arquivo.beg);			
