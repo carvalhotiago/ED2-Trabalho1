@@ -13,37 +13,24 @@
 using namespace std;
 
 template <typename T>
-void PrintListOfBook(vector<T*>* books)
+void PrintListOfBook(vector<T*>& books)
 {
-	for (int i = 0; i < books->size() - 1; i++)
+	for (int i = 0; i < books.size() - 1; i++)
 	{
-		//Book* book = books->at(i);
-		////for (unsigned j = 0; j < books->at(i)->authors->size(); j++)
-		//cout << "authors: " << book->authors->at(0) << endl;
-		//cout << "bestsellersRank: " << book->bestsellersRank << endl;
-		//cout << "categories: " << book->categories << endl;
-		//cout << "edition: " << book->edition << endl;
-		//cout << "id: " << book->id << endl;
-		//cout << "isbn10: " << book->isbn10 << endl;
-		//cout << "isbn13: " << book->isbn13 << endl;
-		//cout << "ratingAvg: " << book->ratingAvg << endl;
-		//cout << "ratingCount: " << book->ratingCount << endl;
-		//cout << "title: " << book->title << endl;
+		Book* book = books.at(i);
+		for (unsigned j = 0; j < book->authors->size() - 1; j++)
+			cout << "authors: " << book->authors->at(j) << endl;
+		cout << "bestsellersRank: " << book->bestsellersRank << endl;
+		for (unsigned k = 0; k < book->categories->size() - 1; k++)
+			cout << "categories: " << book->categories->at(k) << endl;
+		cout << "edition: " << book->edition << endl;
+		cout << "id: " << book->id << endl;
+		cout << "isbn10: " << book->isbn10 << endl;
+		cout << "isbn13: " << book->isbn13 << endl;
+		cout << "ratingAvg: " << book->ratingAvg << endl;
+		cout << "ratingCount: " << book->ratingCount << endl;
+		cout << "title: " << book->title << endl;
 	}
-}
-
-vector<int>* formatadorDeString(int indice, int inicio, int fim, vector<string>* registro)
-{
-	string text = registro->at(indice) = registro->at(indice).substr(inicio, registro->at(fim).size() - fim);
-
-	stringstream iss(text);
-
-	int number;
-	vector<int> myNumbers;
-	while (iss >> number)
-		myNumbers.push_back(number);
-
-	return &myNumbers;
 }
 
 vector<int> split(const string& s, char delimiter) {
@@ -129,8 +116,8 @@ int main()
 					}
 					iterator++;
 				}
-
-				string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
+				
+				string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);		
 				stringstream iss(text);
 				vector<int> authorsIds = split(text, ',');
 				text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
@@ -167,37 +154,23 @@ int main()
 				default:
 					break;
 				}
-
-				////Book* book = books->at(i);
-				//cout << "authors: ";
-				//for (unsigned j = 0; j < book->authors->size(); j++)
-				//	cout << book->authors->at(j) << endl;;
-				//cout << "bestsellersRank: " << book->bestsellersRank << endl;
-				//cout << "categories: ";
-				//for (unsigned k = 0; k < book->authors->size(); k++)
-				//	cout << book->categories->at(k) << endl;
-				//cout << "edition: " << book->edition << endl;
-				//cout << "id: " << book->id << endl;
-				//cout << "isbn10: " << book->isbn10 << endl;
-				//cout << "isbn13: " << book->isbn13 << endl;
-				//cout << "ratingAvg: " << book->ratingAvg << endl;
-				//cout << "ratingCount: " << book->ratingCount << endl;
-				//cout << "title: " << book->title << endl;
 			}
 		}
 
-	/*	Bubblesort bubble;
-		bubble.BubbleSort(*vBooks1, vBooks1->size());
-		for (unsigned j = 0; j < vBooks1->size(); j++)
-			cout << vBooks1->at(j)->title << endl;
-		cout << endl;
-		arquivo.seekg(0, arquivo.beg);*/
+		//Chama o BubbleSort e imprime o vetor de titulos ordenado
+		//Bubblesort bubble;
+		//bubble.BubbleSort(*vBooks1, vBooks1->size());
+		//for (unsigned j = 0; j < vBooks1->size(); j++)
+		//	cout << vBooks1->at(j)->title << endl;
+		//cout << endl;
 
-		Quicksort quick;
-		quick.QuickSort(*vBooks1, 0, vBooks1->size() - 1);
-		for (unsigned j = 0; j < vBooks1->size(); j++)
-			cout << vBooks1->at(j)->title << endl;
-		cout << endl;
+		////Chama o Quicksort e imprime o vetor de titulos ordenado
+		//Quicksort quick;
+		//quick.QuickSort(*vBooks1, 0, vBooks1->size());
+		//for (unsigned j = 0; j < vBooks1->size(); j++)
+		//	cout << vBooks1->at(j)->title << endl;
+		//cout << endl;
+
 		arquivo.seekg(0, arquivo.beg);
 
 		cout << "tamanho dos vetores: " << vBooks1->size() << endl;
@@ -206,7 +179,7 @@ int main()
 		cout << "tamanho dos vetores: " << vBooks4->size() << endl;
 		cout << "tamanho dos vetores: " << vBooks5->size() << endl;
 
-		//PrintListOfBook(vBooks);
+		PrintListOfBook(*vBooks1);
 		arquivo.close();
 	}
 	else
