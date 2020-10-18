@@ -7,6 +7,8 @@
 #include "No.h"
 #include "Lista.h"
 #include "Book.h"
+#include "Bubblesort.h"
+#include "Quicksort.h"
 
 using namespace std;
 
@@ -188,8 +190,19 @@ int main()
 
 			}
 
-			arquivo.seekg(0, arquivo.beg);			
-		}
+	/*	Bubblesort bubble;
+		bubble.BubbleSort(*vBooks1, vBooks1->size());
+		for (unsigned j = 0; j < vBooks1->size(); j++)
+			cout << vBooks1->at(j)->title << endl;
+		cout << endl;
+		arquivo.seekg(0, arquivo.beg);*/
+
+		Quicksort quick;
+		quick.QuickSort(*vBooks1, 0, vBooks1->size() - 1);
+		for (unsigned j = 0; j < vBooks1->size(); j++)
+			cout << vBooks1->at(j)->title << endl;
+		cout << endl;
+		arquivo.seekg(0, arquivo.beg);
 
 		cout << "tamanho dos vetores: " << vBooks1->size() << endl;
 		cout << "tamanho dos vetores: " << vBooks2->size() << endl;
