@@ -38,7 +38,7 @@ void PrintBookTitles(vector<T*>& books)
 {
 	for (int i = 0; i < books.size(); i++)
 	{
-		Book* book = books.at(i);		
+		Book* book = books.at(i);
 		cout << book->title << endl;
 	}
 	cout << endl;
@@ -56,7 +56,6 @@ vector<int>* split(const string& s, char delimiter) {
 
 int main()
 {
-	int N = 10; //numero de linhas aleatorias a serem capturadas
 	srand(time(NULL));
 
 	ifstream entrada;
@@ -74,7 +73,6 @@ int main()
 
 	ifstream arquivo;
 	arquivo.open("Data/small-teste.csv");
-	vector<vector<Book*>*> listaDeVetores;
 
 	Lista<int> authorsIds;
 	int cont = 0;
@@ -85,88 +83,94 @@ int main()
 	{
 		//// Guarda tamanho do arquivo em bytes
 		arquivo.seekg(0, arquivo.end);
-		int tamanhoDoArquivo = arquivo.tellg(); 
+		int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
-
-		for (unsigned j = 0; j < 5; j++) // substituir esse '5' por valoresDeN.at(k), sendo que k será o indice de um for (que ainda vai ser criado) que vai ter como condição "k < valoresDeN.size()"
+		for (int k = 0; k < valoresDeN.size(); k++)
 		{
-			vector<Book*>* vet = new vector<Book*>();
-
-			for (int i = 0; i < 10; i++) // i < x, em que x é o tamanho da amostra aleatória a ser gerada
+		vector<vector<Book*>*> listaDeVetores;
+			for (unsigned j = 0; j < 5; j++) // 5 é o numero de amostras que serão geradas aleatoriamente para cada N
 			{
-				// Pega a linha correspondente a um byte aleatorio
-				srand(time(NULL) + rand());
-				int byteAleatorio = rand() % (tamanhoDoArquivo-500); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
-				arquivo.seekg(byteAleatorio);
+				vector<Book*>* vet = new vector<Book*>();
 
-				//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
-				string dump;
-				string str;
-				getline(arquivo, dump);
-				getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
-
-				Book* book = new Book();
-				stringstream ss(str);
-
-				sregex_iterator iterator(str.begin(), str.end(), regex);
-				vector<string>* registro = new vector<string>;
-				sregex_iterator end;
-
-				while (iterator != end)
+				for (int i = 0; i < valoresDeN.at(k); i++) // i < x, em que x é o tamanho da amostra aleatória a ser gerada
 				{
-					for (unsigned i = 0; i < iterator->size() - 1; i++)
+					// Pega a linha correspondente a um byte aleatorio
+					srand(time(NULL) + rand());
+					int byteAleatorio = rand() % (tamanhoDoArquivo - 500); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
+					arquivo.seekg(byteAleatorio);
+
+					//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
+					string dump;
+					string str;
+					getline(arquivo, dump);
+					getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
+
+					Book* book = new Book();
+					stringstream ss(str);
+
+					sregex_iterator iterator(str.begin(), str.end(), regex);
+					vector<string>* registro = new vector<string>;
+					sregex_iterator end;
+
+					while (iterator != end)
 					{
-						string input;
-						getline((stringstream)(*iterator)[i], input);
-						input = input.substr(1, input.size() - 2);
-						registro->push_back(input);
+						for (unsigned i = 0; i < iterator->size() - 1; i++)
+						{
+							string input;
+							getline((stringstream)(*iterator)[i], input);
+							input = input.substr(1, input.size() - 2);
+							registro->push_back(input);
+						}
+						iterator++;
 					}
-					iterator++;
+
+					string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
+					stringstream iss(text);
+					vector<int>* authorsIds = split(text, ',');
+					text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
+					vector<int>* categories = split(text, ',');
+
+					book->authors = authorsIds;
+					book->bestsellersRank = registro->at(1);
+					book->categories = categories;
+					book->edition = registro->at(3);
+					book->id = registro->at(4);
+					book->isbn10 = registro->at(5);
+					book->isbn13 = registro->at(6);
+					book->ratingAvg = registro->at(7);
+					book->ratingCount = registro->at(8);
+					book->title = registro->at(9);
+
+					vet->push_back(book);
 				}
-				
-				string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);		
-				stringstream iss(text);
-				vector<int>* authorsIds = split(text, ',');
-				text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
-				vector<int>* categories = split(text, ',');
-
-				book->authors = authorsIds;
-				book->bestsellersRank = registro->at(1);
-				book->categories = categories;
-				book->edition = registro->at(3);
-				book->id = registro->at(4);
-				book->isbn10 = registro->at(5);
-				book->isbn13 = registro->at(6);
-				book->ratingAvg = registro->at(7);
-				book->ratingCount = registro->at(8);
-				book->title = registro->at(9);
-
-				vet->push_back(book);
+				listaDeVetores.push_back(vet);
 			}
-			listaDeVetores.push_back(vet);
+
+
+			PrintBookTitles(*listaDeVetores.at(0));
+
+			/*Bubblesort bs;
+			for (int i = 0; i < listaDeVetores.size(); i++)
+			{
+				vector<Book*>* vectorAtual = listaDeVetores.at(i);
+				cout << "i: " << i << endl;
+
+				bs.BubbleSort(*vectorAtual, vectorAtual->size());
+			}*/
+
+
+			Quicksort quick;
+			for (int i = 0; i < listaDeVetores.size(); i++)
+			{
+				vector<Book*>* vectorAtual = listaDeVetores.at(i);
+				cout << "i: " << i << endl;
+
+				quick.Execute(*vectorAtual, 0, vectorAtual->size());
+			}
+
+			
+			PrintBookTitles(*listaDeVetores.at(0));
 		}
-
-		vector<Book*>* vBooks1Copy = new vector<Book*>(*vBooks1);
-
-		Bubblesort bs;
-		for (int i = 0; i < listaDeVetores.size(); i++)
-		{
-			auto vectorAtual = *listaDeVetores.at(i);
-			cout << "i: " << i << endl;
-
-			bs.BubbleSort(vectorAtual, vectorAtual.size());
-		}
-
-		////Chama o BubbleSort e imprime o vetor de titulos ordenado
-		//Bubblesort bubble;
-		//bubble.BubbleSort(*vBooks1, vBooks1->size());
-		//PrintBookTitles(*vBooks1);
-
-		////Chama o Quicksort e imprime o vetor de titulos ordenado
-		//Quicksort quick;
-		//quick.Execute(*vBooks1Copy, 0, vBooks1Copy->size());
-		//PrintBookTitles(*vBooks1Copy);
-
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}
