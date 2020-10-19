@@ -1,6 +1,10 @@
 #include <iostream>
 #include <ctime>
 #include "Bubblesort.h"
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
+
+
 using namespace std;
 
 Bubblesort::Bubblesort()
@@ -11,7 +15,7 @@ Bubblesort::Bubblesort()
 
 void Bubblesort::BubbleSort(vector<Book*> &books, int n)
 {
-	const clock_t t0 = clock();
+	auto t1 = Clock::now();
 	for (int i = 0; i < n - 1; i++)
 	{
 		for (long j = 0; j < n - i - 1; j++)
@@ -28,5 +32,6 @@ void Bubblesort::BubbleSort(vector<Book*> &books, int n)
 		}
 	}
 
-	cout << "Tempo BubblerSort: " << float(clock() - t0) / CLOCKS_PER_SEC << endl;
+	auto t2 = Clock::now();
+	cout << "Tempo BubbleSort: " << chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << " microseconds" << endl;
 }
