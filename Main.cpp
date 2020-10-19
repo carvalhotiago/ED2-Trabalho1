@@ -73,13 +73,8 @@ int main()
 	}
 
 	ifstream arquivo;
-	arquivo.open("Data/teste.txt");
-
-	vector<Book*>* vBooks1 = new vector<Book*>();
-	vector<Book*>* vBooks2 = new vector<Book*>();
-	vector<Book*>* vBooks3 = new vector<Book*>();
-	vector<Book*>* vBooks4 = new vector<Book*>();
-	vector<Book*>* vBooks5 = new vector<Book*>();
+	arquivo.open("Data/small-teste.csv");
+	vector<vector<Book*>*> listaDeVetores;
 
 	Lista<int> authorsIds;
 	int cont = 0;
@@ -93,17 +88,15 @@ int main()
 		int tamanhoDoArquivo = arquivo.tellg(); 
 		arquivo.seekg(0, arquivo.beg);
 
-		cout << "Tamanho do arquivo: " << tamanhoDoArquivo << endl;
-
-		//while (!arquivo.eof())
-		for (unsigned j = 0; j < 5; j++)
+		for (unsigned j = 0; j < 5; j++) // substituir esse '5' por valoresDeN.at(k), sendo que k será o indice de um for (que ainda vai ser criado) que vai ter como condição "k < valoresDeN.size()"
 		{
-			for (int i = 0; i < 5; i++) // falta fazer a lógica para diferentes valores de N
+			vector<Book*>* vet = new vector<Book*>();
+
+			for (int i = 0; i < 10; i++) // i < x, em que x é o tamanho da amostra aleatória a ser gerada
 			{
 				// Pega a linha correspondente a um byte aleatorio
 				srand(time(NULL) + rand());
 				int byteAleatorio = rand() % (tamanhoDoArquivo-500); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
-				cout << "byteAleatorio: " << byteAleatorio << endl;
 				arquivo.seekg(byteAleatorio);
 
 				//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
@@ -148,48 +141,33 @@ int main()
 				book->ratingCount = registro->at(8);
 				book->title = registro->at(9);
 
-				switch (j)
-				{
-				case 0:
-					vBooks1->push_back(book);
-					break;
-				case 1:
-					vBooks2->push_back(book);
-					break;
-				case 2:
-					vBooks3->push_back(book);
-					break;
-				case 3:
-					vBooks4->push_back(book);
-					break;
-				case 4:
-					vBooks5->push_back(book);
-					break;
-				default:
-					break;
-				}
+				vet->push_back(book);
 			}
+			listaDeVetores.push_back(vet);
 		}
 
-		//Chama o BubbleSort e imprime o vetor de titulos ordenado
-	/*	Bubblesort bubble;
-		bubble.BubbleSort(*vBooks1, vBooks1->size());
-		PrintBookTitles(*vBooks1);*/
+		vector<Book*>* vBooks1Copy = new vector<Book*>(*vBooks1);
 
-		//Chama o Quicksort e imprime o vetor de titulos ordenado
-	/*	Quicksort quick;
-		quick.QuickSort(*vBooks1, 0, vBooks1->size());
-		PrintBookTitles(*vBooks1);*/
+		Bubblesort bs;
+		for (int i = 0; i < listaDeVetores.size(); i++)
+		{
+			auto vectorAtual = *listaDeVetores.at(i);
+			cout << "i: " << i << endl;
+
+			bs.BubbleSort(vectorAtual, vectorAtual.size());
+		}
+
+		////Chama o BubbleSort e imprime o vetor de titulos ordenado
+		//Bubblesort bubble;
+		//bubble.BubbleSort(*vBooks1, vBooks1->size());
+		//PrintBookTitles(*vBooks1);
+
+		////Chama o Quicksort e imprime o vetor de titulos ordenado
+		//Quicksort quick;
+		//quick.Execute(*vBooks1Copy, 0, vBooks1Copy->size());
+		//PrintBookTitles(*vBooks1Copy);
 
 		arquivo.seekg(0, arquivo.beg);
-
-		cout << "tamanho dos vetores: " << vBooks1->size() << endl;
-		cout << "tamanho dos vetores: " << vBooks2->size() << endl;
-		cout << "tamanho dos vetores: " << vBooks3->size() << endl;
-		cout << "tamanho dos vetores: " << vBooks4->size() << endl;
-		cout << "tamanho dos vetores: " << vBooks5->size() << endl;
-
-		PrintListOfBook(*vBooks1);
 		arquivo.close();
 	}
 	else
