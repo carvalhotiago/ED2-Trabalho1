@@ -28,6 +28,7 @@ void Quicksort::QuickSort(vector<Book*>& books, int inicio, int fim)
 		if (i <= j)
 		{
 			numComparacoes++;
+			numCopiasRegistros++;
 			aux = books.at(i)->title;
 			books.at(i)->title = books.at(j)->title;
 			books.at(j)->title = aux;
@@ -48,6 +49,7 @@ void Quicksort::QuickSort(vector<Book*>& books, int inicio, int fim)
 long Quicksort::Execute(vector<Book*>& books, int inicio, int fim)
 {
 	numComparacoes = 0;
+	numCopiasRegistros = 0;
 	auto t1 = Clock::now();
 	this->QuickSort(books, inicio, fim);
 	auto t2 = Clock::now();

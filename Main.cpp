@@ -193,23 +193,30 @@ int main()
 			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
 			double somaTemposBubble = 0.0;
 			int somaComparacoes = 0;
+			int somaCopiasRegistros = 0;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
 				vector<Book*>* vectorAtual = listaDeVetores.at(i);
 
 				long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
 
-				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << bubble.numeroDeComparacoes << " comparacoes." << endl;
+				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << bubble.numeroDeComparacoes << " comparacoes, " << bubble.numeroDeCopiasRegistro << " copias de registros." << endl;
 				somaTemposBubble += tempo;
 				somaComparacoes += bubble.numeroDeComparacoes;
+				somaCopiasRegistros += bubble.numeroDeCopiasRegistro;
 			}
 			auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
 			saida << "Tempo medio: " << tempoMedioBubble << " microssegundos." << endl;
 
 			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
-			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes.\n\n" << endl;
+			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
+
+			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
+			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
 #pragma endregion
 */
+
+
 
 #pragma region QuickSort
 			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
@@ -217,22 +224,27 @@ int main()
 			saida << "\tQuickSort - N:" << valoresDeN.at(k) << endl;
 			double somaTemposQuick = 0.0;
 			int somaComparacoes = 0;
+			int somaCopiasRegistros = 0;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
 				vector<Book*>* vectorAtual = listaDeVetores.at(i);
 
 				long tempo = quick.Execute(*vectorAtual, 0, vectorAtual->size());
 
-				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << quick.numComparacoes << " comparacoes." << endl;
+				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << quick.numComparacoes << " comparacoes, " << quick.numCopiasRegistros << " copias de registros." << endl;
 				somaTemposQuick += tempo;
 				somaComparacoes += quick.numComparacoes;
+				somaCopiasRegistros += quick.numCopiasRegistros;
 			}
 
 			auto tempoMedioQuicksort = somaTemposQuick / listaDeVetores.size();
 			saida << "Tempo medio: " << tempoMedioQuicksort << " microssegundos." << endl;
 
 			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
-			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes.\n\n" << endl;
+			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
+
+			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
+			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
 #pragma endregion
 
 		}

@@ -10,12 +10,14 @@ using namespace std;
 Bubblesort::Bubblesort()
 {
 	numeroDeComparacoes = 0;
+	numeroDeCopiasRegistro = 0;
 }
 
 
 long Bubblesort::BubbleSort(vector<Book*> &books, int n)
 {
 	numeroDeComparacoes = 0;
+	numeroDeCopiasRegistro = 0;
 	auto t1 = Clock::now();
 	for (int i = 0; i < n - 1; i++)
 	{
@@ -26,6 +28,7 @@ long Bubblesort::BubbleSort(vector<Book*> &books, int n)
 			if (books.at(j)->title > books.at(static_cast<long long>(j)+1)->title)
 			{
 				numeroDeComparacoes++;
+				numeroDeCopiasRegistro++;
 				string aux = books.at(j)->title;
 				books.at(j)->title = books.at(static_cast<long long>(j)+1)->title;
 				books.at(static_cast<long long>(j)+1)->title = aux;
