@@ -33,6 +33,7 @@ void PrintListOfBook(vector<T*>& books)
 	}
 }
 
+//Printa o título de cada livro de uma lista de livros
 template <typename T>
 void PrintBookTitles(vector<T*>& books)
 {
@@ -44,6 +45,7 @@ void PrintBookTitles(vector<T*>& books)
 	cout << endl;
 }
 
+//Divide uma string contendo uma lista de inteiros em um vector de inteiros, delimitados pelo segundo parâmetro (delimiter)
 vector<int>* split(const string& s, char delimiter) {
 	vector<int>* tokens = new vector<int>;
 	string token;
@@ -56,62 +58,74 @@ vector<int>* split(const string& s, char delimiter) {
 
 int main()
 {
-	srand(time(NULL));
+	//Setta a semente para o valor do tempo atual
+	srand(time(0));
 
+	//Abre o arquivo de entrada com informações dos números N
 	ifstream entrada;
 	entrada.open("Data/entrada.txt");
+
+	//Primeiro parâmetro do arquivo de entrada
 	int numeroDeEntradas;
 	entrada >> numeroDeEntradas;
-	vector<int> valoresDeN;
 
+	//Lê e armazena os valores de N (tamanho das amostras) do arquivo de entrada
+	vector<int> valoresDeN;
 	string str;
-	string x;
-	getline(entrada, x);
+	string linhaIgnorada;
+	getline(entrada, linhaIgnorada);
 	while (getline(entrada, str)) {
 		valoresDeN.push_back(stoi(str));
 	}
+	entrada.close();
 
+	//Lê dataset
 	ifstream arquivo;
-	arquivo.open("Data/small-teste.csv");
+	arquivo.open("Data/dataset_simp_sem_descricao.csv");
 
-	Lista<int> authorsIds;
-	int cont = 0;
-
+	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
 
 	if (arquivo.is_open())
 	{
-		//// Guarda tamanho do arquivo em bytes
+		// Guarda tamanho do arquivo em bytes
 		arquivo.seekg(0, arquivo.end);
-		int tamanhoDoArquivo = arquivo.tellg();
+		unsigned int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
+
+		// Para cada um dos valores de N passados
 		for (int k = 0; k < valoresDeN.size(); k++)
 		{
-		vector<vector<Book*>*> listaDeVetores;
-			for (unsigned j = 0; j < 5; j++) // 5 é o numero de amostras que serão geradas aleatoriamente para cada N
+			//Estrutura que irá armazenar os 5 vetores de livros preenchidos aleatoriamente
+			vector<vector<Book*>*> listaDeVetores;
+
+			// Gera 5 amostras de entradas aleatórias do dataset
+			for (unsigned j = 0; j < 5; j++)
 			{
+				//Estrutura que irá armazenar cada vetor de livros gerado
 				vector<Book*>* vet = new vector<Book*>();
 
-				for (int i = 0; i < valoresDeN.at(k); i++) // i < x, em que x é o tamanho da amostra aleatória a ser gerada
+				//Cada uma das 5 amostras geradas terá o mesmo tamanho, que é um dos Ns passados
+				for (int i = 0; i < valoresDeN.at(k); i++)
 				{
 					// Pega a linha correspondente a um byte aleatorio
-					srand(time(NULL) + rand());
-					int byteAleatorio = rand() % (tamanhoDoArquivo - 500); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
+					unsigned int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 5000); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
 					arquivo.seekg(byteAleatorio);
+					cout << "byteAleatorio " << byteAleatorio << endl;
 
 					//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
 					string dump;
 					string str;
 					getline(arquivo, dump);
-					getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N
+					getline(arquivo, str);
 
 					Book* book = new Book();
 					stringstream ss(str);
 
+					//Itera sobre a linha recuperada, capturando os grupos de informação através de RegEx
 					sregex_iterator iterator(str.begin(), str.end(), regex);
 					vector<string>* registro = new vector<string>;
 					sregex_iterator end;
-
 					while (iterator != end)
 					{
 						for (unsigned i = 0; i < iterator->size() - 1; i++)
@@ -124,6 +138,7 @@ int main()
 						iterator++;
 					}
 
+					//Parsea as informações e popula um objeto Book que será adicionado ao vetor de tamanho N
 					string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
 					stringstream iss(text);
 					vector<int>* authorsIds = split(text, ',');
@@ -142,13 +157,17 @@ int main()
 					book->title = registro->at(9);
 
 					vet->push_back(book);
+					arquivo.seekg(0, arquivo.beg);
 				}
+
+				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
 				listaDeVetores.push_back(vet);
 			}
 
 
-			PrintBookTitles(*listaDeVetores.at(0));
+			//PrintBookTitles(*listaDeVetores.at(4));
 
+			//Chama o algoritmo de ordenação BubbleSort para cada um dos vetores da lista de amostras
 			/*Bubblesort bs;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
@@ -158,7 +177,7 @@ int main()
 				bs.BubbleSort(*vectorAtual, vectorAtual->size());
 			}*/
 
-
+			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
 			Quicksort quick;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
@@ -169,7 +188,7 @@ int main()
 			}
 
 			
-			PrintBookTitles(*listaDeVetores.at(0));
+			//PrintBookTitles(*listaDeVetores.at(4));
 		}
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
