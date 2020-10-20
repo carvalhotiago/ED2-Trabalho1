@@ -105,10 +105,10 @@ int main()
 					getline(arquivo, dump);
 					getline(arquivo, str);
 					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
-					//estamos utilizando apenas strings que começam ou terminam com aspas e strings com mais de 100 caracteres para evitar algum resto dessas quebras de linha
-					while(str.length() < 100 || str.back() != '"' || str.at(0) != '"')
+					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
+					while(str.back() != '"' || str.at(0) != '"')
 					{ 					
-						getline(arquivo, str); //Tirei o "While(getline) pq o número de vezes que ele vai ler linhas aleatórias vai ser definido pelo N						
+						getline(arquivo, str);				
 					}
 
 					Book* book = new Book();
