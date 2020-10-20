@@ -109,7 +109,8 @@ int main()
 				for (int i = 0; i < valoresDeN.at(k); i++)
 				{
 					// Pega a linha correspondente a um byte aleatorio
-					unsigned int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 5000); // esse desconto no tamanhoDoArquivo evita com que a a linha aleatória seja a última, o que causaria erro já que não há linha seguinte à última
+					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
+					cout << byteAleatorio << " ";
 					arquivo.seekg(byteAleatorio);
 					cout << "byteAleatorio " << byteAleatorio << endl;
 
@@ -118,6 +119,12 @@ int main()
 					string str;
 					getline(arquivo, dump);
 					getline(arquivo, str);
+					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
+					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
+					while(str.back() != '"' || str.at(0) != '"')
+					{ 					
+						getline(arquivo, str);				
+					}
 
 					Book* book = new Book();
 					stringstream ss(str);
@@ -132,22 +139,29 @@ int main()
 						{
 							string input;
 							getline((stringstream)(*iterator)[i], input);
+
 							input = input.substr(1, input.size() - 2);
 							registro->push_back(input);
 						}
 						iterator++;
 					}
 
-					//Parsea as informações e popula um objeto Book que será adicionado ao vetor de tamanho N
-					string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
-					stringstream iss(text);
-					vector<int>* authorsIds = split(text, ',');
-					text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
-					vector<int>* categories = split(text, ',');
-
-					book->authors = authorsIds;
-					book->bestsellersRank = registro->at(1);
-					book->categories = categories;
+					if (registro->at(0) != "")
+					{
+						string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
+						stringstream iss(text);
+						vector<int>* authorsIds = split(text, ',');
+						book->authors = authorsIds;
+					}
+				
+					if (registro->at(2) != "")
+					{
+						string text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
+						vector<int>* categories = split(text, ',');
+						book->categories = categories;
+					}			
+					
+					book->bestsellersRank = registro->at(1);					
 					book->edition = registro->at(3);
 					book->id = registro->at(4);
 					book->isbn10 = registro->at(5);
@@ -164,8 +178,7 @@ int main()
 				listaDeVetores.push_back(vet);
 			}
 
-
-			//PrintBookTitles(*listaDeVetores.at(4));
+			PrintBookTitles(*listaDeVetores.at(0));
 
 			//Chama o algoritmo de ordenação BubbleSort para cada um dos vetores da lista de amostras
 			/*Bubblesort bs;
@@ -186,9 +199,8 @@ int main()
 
 				quick.Execute(*vectorAtual, 0, vectorAtual->size());
 			}
-
 			
-			//PrintBookTitles(*listaDeVetores.at(4));
+			PrintBookTitles(*listaDeVetores.at(0));
 		}
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
