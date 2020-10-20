@@ -116,6 +116,8 @@ int main()
 				//Cada uma das 5 amostras geradas terá o mesmo tamanho, que é um dos Ns passados
 				for (int i = 0; i < valoresDeN.at(k); i++)
 				{
+					if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
+
 					// Pega a linha correspondente a um byte aleatorio
 					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
 					//cout << byteAleatorio << " ";
@@ -130,7 +132,7 @@ int main()
 
 					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
 					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
-					while(str.back() != '"' || str.at(0) != '"')
+					while(str.empty() || str.back() != '"' || str.at(0) != '"')
 					{ 					
 						getline(arquivo, str);				
 					}
@@ -186,7 +188,7 @@ int main()
 				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
 				listaDeVetores.push_back(vet);
 			}
-/*
+
 #pragma region BubbleSort
 			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
 			Bubblesort bubble;
@@ -214,10 +216,10 @@ int main()
 			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
 			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
 #pragma endregion
-*/
 
 
 
+/*
 #pragma region QuickSort
 			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
 			Quicksort quick;
@@ -246,12 +248,11 @@ int main()
 			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
 			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
 #pragma endregion
-
+*/
 		}
 
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
-		saida.close();
 	}
 	else
 	{
@@ -259,6 +260,7 @@ int main()
 		exit(1);
 	}
 
+	saida.close();
 	cout << "Programa encerrado com sucesso!" << endl;
 
 	return 0;
