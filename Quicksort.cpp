@@ -14,14 +14,20 @@ void Quicksort::QuickSort(vector<Book*>& books, int inicio, int fim)
 
 	while (i <= j)
 	{
-		while (books.at(i)->title < pivot && i < fim)		
+		numComparacoes++;
+		while (books.at(i)->title < pivot && i < fim){
+			numComparacoes++;
 			i++;
+		}
 		
-		while (books.at(j)->title > pivot && j > inicio)
+		while (books.at(j)->title > pivot && j > inicio){
+			numComparacoes++;
 			j--;
+		}
 		
 		if (i <= j)
 		{
+			numComparacoes++;
 			aux = books.at(i)->title;
 			books.at(i)->title = books.at(j)->title;
 			books.at(j)->title = aux;
@@ -29,17 +35,24 @@ void Quicksort::QuickSort(vector<Book*>& books, int inicio, int fim)
 			j--;
 		}
 	}
-	if (j > inicio)
+	if (j > inicio){
+		numComparacoes++;
 		QuickSort(books, inicio, j + 1);
-	if (i < fim)
+	}
+	if (i < fim) {
+		numComparacoes++;
 		QuickSort(books, i, fim);
+	}
 }
 
-void Quicksort::Execute(vector<Book*>& books, int inicio, int fim)
+long Quicksort::Execute(vector<Book*>& books, int inicio, int fim)
 {
+	numComparacoes = 0;
 	auto t1 = Clock::now();
 	this->QuickSort(books, inicio, fim);
 	auto t2 = Clock::now();
 
-	cout << "Tempo Quicksort: " << chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << " microseconds" << endl;
+	long tempo = chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+	cout << "Tempo Quicksort: " << tempo << " microseconds" << endl;
+	return tempo;
 }

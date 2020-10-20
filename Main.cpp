@@ -61,6 +61,14 @@ int main()
 	//Setta a semente para o valor do tempo atual
 	srand(time(0));
 
+	//Abre arquivo de saida, que irá armazenar estatísticas do desempenho de toda a execução
+	ofstream saida;
+	saida.open("saida.txt");
+	if (saida.is_open())
+		cout << "Arquivo saida aberto com sucesso." << endl;
+	else
+		cout << "Erro no arquivo saida." << endl;
+
 	//Abre o arquivo de entrada com informações dos números N
 	ifstream entrada;
 	entrada.open("Data/entrada.txt");
@@ -110,15 +118,16 @@ int main()
 				{
 					// Pega a linha correspondente a um byte aleatorio
 					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
-					cout << byteAleatorio << " ";
+					//cout << byteAleatorio << " ";
 					arquivo.seekg(byteAleatorio);
-					cout << "byteAleatorio " << byteAleatorio << endl;
+					//cout << "byteAleatorio " << byteAleatorio << endl;
 
 					//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
 					string dump;
 					string str;
 					getline(arquivo, dump);
 					getline(arquivo, str);
+
 					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
 					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
 					while(str.back() != '"' || str.at(0) != '"')
@@ -177,33 +186,60 @@ int main()
 				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
 				listaDeVetores.push_back(vet);
 			}
-
-			PrintBookTitles(*listaDeVetores.at(0));
-
-			//Chama o algoritmo de ordenação BubbleSort para cada um dos vetores da lista de amostras
-			/*Bubblesort bs;
+/*
+#pragma region BubbleSort
+			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
+			Bubblesort bubble;
+			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
+			double somaTemposBubble = 0.0;
+			int somaComparacoes = 0;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
 				vector<Book*>* vectorAtual = listaDeVetores.at(i);
-				cout << "i: " << i << endl;
 
-				bs.BubbleSort(*vectorAtual, vectorAtual->size());
-			}*/
+				long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
 
+				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << bubble.numeroDeComparacoes << " comparacoes." << endl;
+				somaTemposBubble += tempo;
+				somaComparacoes += bubble.numeroDeComparacoes;
+			}
+			auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
+			saida << "Tempo medio: " << tempoMedioBubble << " microssegundos." << endl;
+
+			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
+			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes.\n\n" << endl;
+#pragma endregion
+*/
+
+#pragma region QuickSort
 			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
 			Quicksort quick;
+			saida << "\tQuickSort - N:" << valoresDeN.at(k) << endl;
+			double somaTemposQuick = 0.0;
+			int somaComparacoes = 0;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
 				vector<Book*>* vectorAtual = listaDeVetores.at(i);
-				cout << "i: " << i << endl;
 
-				quick.Execute(*vectorAtual, 0, vectorAtual->size());
+				long tempo = quick.Execute(*vectorAtual, 0, vectorAtual->size());
+
+				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << quick.numComparacoes << " comparacoes." << endl;
+				somaTemposQuick += tempo;
+				somaComparacoes += quick.numComparacoes;
 			}
-			
-			PrintBookTitles(*listaDeVetores.at(0));
+
+			auto tempoMedioQuicksort = somaTemposQuick / listaDeVetores.size();
+			saida << "Tempo medio: " << tempoMedioQuicksort << " microssegundos." << endl;
+
+			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
+			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes.\n\n" << endl;
+#pragma endregion
+
 		}
+
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
+		saida.close();
 	}
 	else
 	{

@@ -13,17 +13,19 @@ Bubblesort::Bubblesort()
 }
 
 
-void Bubblesort::BubbleSort(vector<Book*> &books, int n)
+long Bubblesort::BubbleSort(vector<Book*> &books, int n)
 {
+	numeroDeComparacoes = 0;
 	auto t1 = Clock::now();
 	for (int i = 0; i < n - 1; i++)
 	{
+		numeroDeComparacoes++;
 		for (long j = 0; j < n - i - 1; j++)
 		{
 			numeroDeComparacoes++;
 			if (books.at(j)->title > books.at(static_cast<long long>(j)+1)->title)
 			{
-				//numeroDeTrocas++;
+				numeroDeComparacoes++;
 				string aux = books.at(j)->title;
 				books.at(j)->title = books.at(static_cast<long long>(j)+1)->title;
 				books.at(static_cast<long long>(j)+1)->title = aux;
@@ -33,5 +35,7 @@ void Bubblesort::BubbleSort(vector<Book*> &books, int n)
 	}
 
 	auto t2 = Clock::now();
-	cout << "Tempo BubbleSort: " << chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << " microseconds" << endl;
+	long tempo = chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+	cout << "Tempo BubbleSort: " << tempo << " microseconds" << endl;
+	return tempo;
 }

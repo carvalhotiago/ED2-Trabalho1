@@ -4,11 +4,10 @@
 #include<vector>
 
 class Bubblesort {
-private:
-	int numeroDeComparacoes;
 public:
+	int numeroDeComparacoes;
 	Bubblesort();
-	void BubbleSort(vector<Book*>& books, int n);
+	long BubbleSort(vector<Book*>& books, int n);
 };
 
 #endif
