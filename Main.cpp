@@ -9,6 +9,7 @@
 #include "Book.h"
 #include "Bubblesort.h"
 #include "Quicksort.h"
+#include "ShellSort.h"
 
 using namespace std;
 
@@ -89,7 +90,7 @@ int main()
 
 	//Lê dataset
 	ifstream arquivo;
-	arquivo.open("Data/dataset_simp_sem_descricao.csv");
+	arquivo.open("Data/datasetTest.csv");
 
 	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
@@ -116,7 +117,7 @@ int main()
 				//Cada uma das 5 amostras geradas terá o mesmo tamanho, que é um dos Ns passados
 				for (int i = 0; i < valoresDeN.at(k); i++)
 				{
-					if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
+					//if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
 
 					// Pega a linha correspondente a um byte aleatorio
 					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
@@ -189,26 +190,54 @@ int main()
 				listaDeVetores.push_back(vet);
 			}
 
-#pragma region BubbleSort
-			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
-			Bubblesort bubble;
-			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
-			double somaTemposBubble = 0.0;
+//#pragma region BubbleSort
+//			//Chama o algoritmo de ordenação BubbleSort para cada um dos vetores da lista de amostras
+//			Bubblesort bubble;
+//			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
+//			double somaTemposBubble = 0.0;
+//			int somaComparacoes = 0;
+//			int somaCopiasRegistros = 0;
+//			for (int i = 0; i < listaDeVetores.size(); i++)
+//			{
+//				vector<Book*>* vectorAtual = listaDeVetores.at(i);
+//
+//				long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
+//
+//				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << bubble.numeroDeComparacoes << " comparacoes, " << bubble.numeroDeCopiasRegistro << " copias de registros." << endl;
+//				somaTemposBubble += tempo;
+//				somaComparacoes += bubble.numeroDeComparacoes;
+//				somaCopiasRegistros += bubble.numeroDeCopiasRegistro;
+//			}
+//			auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
+//			saida << "Tempo medio: " << tempoMedioBubble << " microssegundos." << endl;
+//
+//			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
+//			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
+//
+//			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
+//			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
+#pragma endregion
+
+#pragma region ShellSort
+			//Chama o algoritmo de ordenação ShellSort para cada um dos vetores da lista de amostras
+			ShellSort shell;
+			saida << "\ShellSort - N:" << valoresDeN.at(k) << endl;
+			double somaTemposShell = 0.0;
 			int somaComparacoes = 0;
 			int somaCopiasRegistros = 0;
 			for (int i = 0; i < listaDeVetores.size(); i++)
 			{
 				vector<Book*>* vectorAtual = listaDeVetores.at(i);
 
-				long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
+				long tempo = shell.Shellsort(*vectorAtual, vectorAtual->size());
 
-				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << bubble.numeroDeComparacoes << " comparacoes, " << bubble.numeroDeCopiasRegistro << " copias de registros." << endl;
-				somaTemposBubble += tempo;
-				somaComparacoes += bubble.numeroDeComparacoes;
-				somaCopiasRegistros += bubble.numeroDeCopiasRegistro;
+				saida << "Amostra " << i << ": " << tempo << " microssegundos, " << shell.numeroDeComparacoes << " comparacoes, " << shell.numeroDeCopiasRegistro << " copias de registros." << endl;
+				somaTemposShell += tempo;
+				somaComparacoes += shell.numeroDeComparacoes;
+				somaCopiasRegistros += shell.numeroDeCopiasRegistro;
 			}
-			auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
-			saida << "Tempo medio: " << tempoMedioBubble << " microssegundos." << endl;
+			auto tempoMedioShell = somaTemposShell / listaDeVetores.size();
+			saida << "Tempo medio: " << tempoMedioShell << " microssegundos." << endl;
 
 			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
 			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
@@ -216,9 +245,6 @@ int main()
 			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
 			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
 #pragma endregion
-
-
-
 /*
 #pragma region QuickSort
 			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras

@@ -148,6 +148,7 @@
     <ClCompile Include="ReadAndWrite_Cpp.cpp" />
     <ClCompile Include="Bubblesort.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ShellSort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="teste.txt" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Lista.h" />
     <ClInclude Include="No.h" />
     <ClInclude Include="Quicksort.h" />
+    <ClInclude Include="ShellSort.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
