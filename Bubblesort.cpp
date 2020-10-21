@@ -38,7 +38,7 @@ long Bubblesort::BubbleSort(vector<Book*> &books, int n)
 	}
 
 	auto t2 = Clock::now();
-	long tempo = chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-	cout << "Tempo BubbleSort: " << tempo << " microseconds" << endl;
+	long tempo = chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+	cout << "Tempo BubbleSort: " << tempo << " milliseconds" << endl;
 	return tempo;
 }

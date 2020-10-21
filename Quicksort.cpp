@@ -54,7 +54,7 @@ long Quicksort::Execute(vector<Book*>& books, int inicio, int fim)
 	this->QuickSort(books, inicio, fim);
 	auto t2 = Clock::now();
 
-	long tempo = chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-	cout << "Tempo Quicksort: " << tempo << " microseconds" << endl;
+	long tempo = chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+	cout << "Tempo Quicksort: " << tempo << " milliseconds" << endl;
 	return tempo;
 }
