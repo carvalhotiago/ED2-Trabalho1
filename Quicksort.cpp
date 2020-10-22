@@ -5,6 +5,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 using namespace std;
 
+//Algoritmo QuickSort
 void Quicksort::QuickSort(vector<Book*>& books, int inicio, int fim)
 {
 	int i = inicio;
@@ -46,6 +47,7 @@ void Quicksort::QuickSort(vector<Book*>& books, int inicio, int fim)
 	}
 }
 
+//Algortimo de execução do QuickSort
 long Quicksort::Execute(vector<Book*>& books, int inicio, int fim)
 {
 	numComparacoes = 0;

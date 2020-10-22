@@ -14,7 +14,7 @@ ShellSort::ShellSort()
 	numeroDeCopiasRegistro = 0;
 }
 
-
+//Algoritmo de execução do ShellSort
 long ShellSort::Shellsort(vector<Book*>& books, int n)
 {
 	const clock_t t0 = clock();

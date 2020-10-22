@@ -13,7 +13,7 @@ Bubblesort::Bubblesort()
 	numeroDeCopiasRegistro = 0;
 }
 
-
+//Algoritmo de execução do BubbleSort
 long Bubblesort::BubbleSort(vector<Book*> &books, int n)
 {
 	numeroDeComparacoes = 0;

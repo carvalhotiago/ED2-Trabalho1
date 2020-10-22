@@ -13,6 +13,7 @@
 
 using namespace std;
 
+//Imprime todos os dados de uma lista de livros
 template <typename T>
 void PrintListOfBook(vector<T*>& books)
 {
@@ -121,9 +122,7 @@ int main()
 
 					// Pega a linha correspondente a um byte aleatorio
 					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
-					//cout << byteAleatorio << " ";
 					arquivo.seekg(byteAleatorio);
-					//cout << "byteAleatorio " << byteAleatorio << endl;
 
 					//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
 					string dump;
