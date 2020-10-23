@@ -35,7 +35,7 @@ void PrintListOfBook(vector<T*>& books)
 	}
 }
 
-//Printa o título de cada livro de uma lista de livros
+//Printa o tÃ­tulo de cada livro de uma lista de livros
 template <typename T>
 void PrintBookTitles(vector<T*>& books)
 {
@@ -47,7 +47,7 @@ void PrintBookTitles(vector<T*>& books)
 	cout << endl;
 }
 
-//Divide uma string contendo uma lista de inteiros em um vector de inteiros, delimitados pelo segundo parâmetro (delimiter)
+//Divide uma string contendo uma lista de inteiros em um vector de inteiros, delimitados pelo segundo parÃ¢metro (delimiter)
 vector<int>* split(const string& s, char delimiter) {
 	vector<int>* tokens = new vector<int>;
 	string token;
@@ -63,7 +63,7 @@ int main()
 	//Setta a semente para o valor do tempo atual
 	srand(time(0));
 
-	//Abre arquivo de saida, que irá armazenar estatísticas do desempenho de toda a execução
+	//Abre arquivo de saida, que irÃ¡ armazenar estatÃ­sticas do desempenho de toda a execuÃ§Ã£o
 	ofstream saida;
 	saida.open("saida.txt");
 	if (saida.is_open())
@@ -71,15 +71,15 @@ int main()
 	else
 		cout << "Erro no arquivo saida." << endl;
 
-	//Abre o arquivo de entrada com informações dos números N
+	//Abre o arquivo de entrada com informaÃ§Ãµes dos nÃºmeros N
 	ifstream entrada;
 	entrada.open("Data/entrada.txt");
 
-	//Primeiro parâmetro do arquivo de entrada
+	//Primeiro parÃ¢metro do arquivo de entrada
 	int numeroDeEntradas;
 	entrada >> numeroDeEntradas;
 
-	//Lê e armazena os valores de N (tamanho das amostras) do arquivo de entrada
+	//LÃª e armazena os valores de N (tamanho das amostras) do arquivo de entrada
 	vector<int> valoresDeN;
 	string str;
 	string linhaIgnorada;
@@ -89,11 +89,11 @@ int main()
 	}
 	entrada.close();
 
-	//Lê dataset
+	//LÃª dataset
 	ifstream arquivo;
 	arquivo.open("Data/datasetTest.csv");
 
-	//Expressão regular para captura dos grupos de informações das linhas
+	//ExpressÃ£o regular para captura dos grupos de informaÃ§Ãµes das linhas
 	regex regex("\s*(\"[^\"]*\")");
 
 	if (arquivo.is_open())
@@ -106,16 +106,16 @@ int main()
 		// Para cada um dos valores de N passados
 		for (int k = 0; k < valoresDeN.size(); k++)
 		{
-			//Estrutura que irá armazenar os 5 vetores de livros preenchidos aleatoriamente
+			//Estrutura que irÃ¡ armazenar os 5 vetores de livros preenchidos aleatoriamente
 			vector<vector<Book*>*> listaDeVetores;
 
-			// Gera 5 amostras de entradas aleatórias do dataset
+			// Gera 5 amostras de entradas aleatÃ³rias do dataset
 			for (unsigned j = 0; j < 5; j++)
 			{
-				//Estrutura que irá armazenar cada vetor de livros gerado
+				//Estrutura que irÃ¡ armazenar cada vetor de livros gerado
 				vector<Book*>* vet = new vector<Book*>();
 
-				//Cada uma das 5 amostras geradas terá o mesmo tamanho, que é um dos Ns passados
+				//Cada uma das 5 amostras geradas terÃ¡ o mesmo tamanho, que Ã© um dos Ns passados
 				for (int i = 0; i < valoresDeN.at(k); i++)
 				{
 					//if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
@@ -124,14 +124,14 @@ int main()
 					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
 					arquivo.seekg(byteAleatorio);
 
-					//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
+					//Primeiro dÃ¡ um getline para ir pro inÃ­cio da linha seguinte Ã  linha aleatÃ³ria em que caiu, e entÃ£o dÃ¡ o getline pra pegar a linha que nos interessa
 					string dump;
 					string str;
 					getline(arquivo, dump);
 					getline(arquivo, str);
 
-					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
-					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
+					//Existem casos de string que quebram a linha na propriedade tÃ­tulo e quebram o cÃ³digo na hora de armazenar os valores na variÃ¡vel book, por isso
+					//estamos utilizando apenas strings que comeÃ§am ou terminam com aspas para garantir que nÃ£o leremos algum resto de quebra de linha de um tÃ­tulo nesse estado
 					while(str.empty() || str.back() != '"' || str.at(0) != '"')
 					{ 					
 						getline(arquivo, str);				
@@ -140,7 +140,7 @@ int main()
 					Book* book = new Book();
 					stringstream ss(str);
 
-					//Itera sobre a linha recuperada, capturando os grupos de informação através de RegEx
+					//Itera sobre a linha recuperada, capturando os grupos de informaÃ§Ã£o atravÃ©s de RegEx
 					sregex_iterator iterator(str.begin(), str.end(), regex);
 					vector<string>* registro = new vector<string>;
 					sregex_iterator end;
@@ -181,16 +181,17 @@ int main()
 					book->ratingCount = registro->at(8);
 					book->title = registro->at(9);
 
+					//Armazena no vetor das amostras o livro recuperado da linha aleatÃ³ria interpretada e volta para o inÃ­cio do arquivo 
 					vet->push_back(book);
 					arquivo.seekg(0, arquivo.beg);
 				}
 
-				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
+				//Ao terminar de gerar o vetor com N livros aleatÃ³rios, o coloca na lista que vai guardar as 5 amostras
 				listaDeVetores.push_back(vet);
 			}
 
 //#pragma region BubbleSort
-//			//Chama o algoritmo de ordenação BubbleSort para cada um dos vetores da lista de amostras
+//			//Chama o algoritmo de ordenaÃ§Ã£o BubbleSort para cada um dos vetores da lista de amostras
 //			Bubblesort bubble;
 //			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
 //			double somaTemposBubble = 0.0;
@@ -218,7 +219,7 @@ int main()
 #pragma endregion
 
 #pragma region ShellSort
-			//Chama o algoritmo de ordenação ShellSort para cada um dos vetores da lista de amostras
+			//Chama o algoritmo de ordenaÃ§Ã£o ShellSort para cada um dos vetores da lista de amostras
 			ShellSort shell;
 			saida << "\ShellSort - N:" << valoresDeN.at(k) << endl;
 			double somaTemposShell = 0.0;
@@ -246,7 +247,7 @@ int main()
 #pragma endregion
 /*
 #pragma region QuickSort
-			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
+			//Chama o algoritmo de ordenaÃ§Ã£o QuickSort para cada um dos vetores da lista de amostras
 			Quicksort quick;
 			saida << "\tQuickSort - N:" << valoresDeN.at(k) << endl;
 			double somaTemposQuick = 0.0;
