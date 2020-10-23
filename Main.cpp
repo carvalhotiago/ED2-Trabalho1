@@ -281,7 +281,7 @@ int main()
 	}
 	else
 	{
-		cerr << "Erro ao abrir arquivo!" << endl;
+		cerr << "Erro ao abrir arquivo com os dados para leitura!" << endl;
 		exit(1);
 	}
 
