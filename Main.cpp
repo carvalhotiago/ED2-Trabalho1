@@ -10,6 +10,7 @@
 #include "Bubblesort.h"
 #include "Quicksort.h"
 #include "BooksHashTable.h"
+#include "AuthorsHashTable.h"
 
 using namespace std;
 
@@ -55,6 +56,24 @@ vector<int>* split(const string& s, char delimiter) {
 		tokens->push_back(stoi(token));
 	}
 	return tokens;
+}
+
+Author* GetAuthorById(int id)
+{
+	//TO DO
+}
+
+vector<Author*> GetAuthorsFromBook(Book* book)
+{
+	vector<Author*> autores;
+
+	for (int i = 0; i < book->authors->size(); i++)
+	{
+		Author* autor = GetAuthorById(book->authors->at(i));
+		autores.push_back(autor);
+	}
+
+	return autores;
 }
 
 int main()
@@ -104,6 +123,7 @@ int main()
 
 
 	BooksHashTable* booksHashTable = new BooksHashTable(valoresDeN.at(0));
+	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(valoresDeN.at(0));
 
 
 	if (arquivo.is_open())
@@ -197,6 +217,12 @@ int main()
 					arquivo.seekg(0, arquivo.beg);
 
 					booksHashTable->Insert(book);
+
+					vector<Author*> autores = GetAuthorsFromBook(book);
+					for (Author* autor : autores)
+					{
+						authorsHashTable->Insert(autor);
+					}
 				}
 
 				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras

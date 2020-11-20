@@ -1,0 +1,59 @@
+﻿#include "AuthorsHashTable.h"
+#include <iostream>
+
+using namespace std;
+
+AuthorsHashTable::AuthorsHashTable(int size)
+{
+	hashTable.resize(size);
+	for (int i = 0; i < size; i++)
+	{
+		hashTable.at(i) = new vector<Author*>();
+	}
+	tableSize = size;
+	numeroDeColisoes = 0;
+}
+
+int AuthorsHashTable::HashFunction(string name)
+{
+	int soma = 0;
+	for (int i = 0; i < name.size(); i++)
+		soma = soma + name.at(i);
+	return soma % tableSize;
+}
+
+void AuthorsHashTable::Insert(Author* author)
+{
+	int hash = HashFunction(author->authorName);
+	auto row = this->hashTable.at(hash);
+	row->push_back(author);
+}
+
+Author* AuthorsHashTable::Lookup(string name)
+{
+	int hash = HashFunction(name);
+	auto row = this->hashTable.at(hash);
+
+	if (row->empty()) return nullptr;
+
+	Author* author;
+	for (int i = 0; i < row->size(); i++)
+	{
+		author = row->at(i);
+		if (author->authorName == name)
+			return author;		
+	}
+	return nullptr;
+
+}
+
+int AuthorsHashTable::GetNumeroDeColisoes()
+{
+	int numeroDeColisoes = 0;
+	for (vector<Author*>* row : this->hashTable)
+	{
+		if (row->size() > 1)		//Se uma linha tem mais de 1 registro, eh pq houve colisao
+			numeroDeColisoes += row->size() - 1;
+	}
+	return numeroDeColisoes;
+}
