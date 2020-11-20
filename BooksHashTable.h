@@ -14,11 +14,11 @@ public:
 	BooksHashTable(int size);
 	~BooksHashTable();
 	int HashFunction(int key);
-	vector<vector<Book*>*> booksHashTable;
 	void Insert(Book* book);
 	Book* Lookup(int key);
 	int GetNumeroDeColisoes();
 	void PrintHashTable();
 
+	vector<vector<Book*>*> hashTable;
 };
 

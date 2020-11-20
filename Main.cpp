@@ -9,6 +9,7 @@
 #include "Book.h"
 #include "Bubblesort.h"
 #include "Quicksort.h"
+#include "BooksHashTable.h"
 
 using namespace std;
 
@@ -93,6 +94,17 @@ int main()
 
 	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
+
+
+
+
+
+
+
+
+
+	BooksHashTable* booksHashTable = new BooksHashTable(valoresDeN.at(0));
+
 
 	if (arquivo.is_open())
 	{
@@ -183,6 +195,8 @@ int main()
 
 					vet->push_back(book);
 					arquivo.seekg(0, arquivo.beg);
+
+					booksHashTable->Insert(book);
 				}
 
 				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
@@ -252,6 +266,9 @@ int main()
 
 		}
 
+
+		booksHashTable->PrintHashTable();
+		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n";
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}
