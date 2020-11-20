@@ -141,6 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Book.cpp" />
+    <ClCompile Include="BooksHashTable.cpp" />
     <ClCompile Include="files.cpp" />
     <ClCompile Include="Lista.cpp" />
     <ClCompile Include="No.cpp" />
@@ -154,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h" />
+    <ClInclude Include="BooksHashTable.h" />
     <ClInclude Include="Bubblesort.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="No.h" />
