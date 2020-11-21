@@ -57,3 +57,29 @@ int AuthorsHashTable::GetNumeroDeColisoes()
 	}
 	return numeroDeColisoes;
 }
+
+vector<Author*>* AuthorsHashTable::GetListaDeAutores()
+{
+	vector<Author*>* autores = new vector<Author*>();
+	for (int i = 0; i < this->tableSize; i++)
+	{
+		vector<Author*>* row = this->hashTable.at(i);
+		for (int j = 0; j < row->size(); j++)
+		{
+			autores->push_back(row->at(j));
+		}
+	}
+
+	return autores;
+}
+
+vector<Author*>* AuthorsHashTable::GetListaDeAutoresOrdenadaPorAppearances()
+{
+	auto autores = GetListaDeAutores();
+	auto autoresOrdenados = QuickSort(autores);
+}
+
+vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores)
+{
+	return nullptr;
+}

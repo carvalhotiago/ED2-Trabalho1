@@ -19,6 +19,9 @@ public:
 	Author* Lookup(string key);
 	int GetNumeroDeColisoes();
 	void PrintHashTable();
+	vector<Author*>* GetListaDeAutores();
+	vector<Author*>* GetListaDeAutoresOrdenadaPorAppearances();
+	vector<Author*>* QuickSort(vector<Author*>* autores);
 
 	vector<vector<Author*>*> hashTable;
 };
