@@ -112,3 +112,15 @@ vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inici
 		QuickSort(autores, i, fim);
 	}
 }
+
+void AuthorsHashTable::PrintListaDeAutores(vector<Author*>* autores)
+{
+	cout << "Lista de autores ordenados por appearances (desc)\n";
+	for (int i = autores->size()-1 ; i >= 0; i++)
+	{
+		auto autor = autores->at(i);
+		cout << autor->authorName << ": " << autor->appearances << endl;
+	}
+}
+
+
