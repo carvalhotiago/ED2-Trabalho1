@@ -10,6 +10,5 @@ public:
 	void repartir_filho(NoArvB* pai, int i, int ordem);
 	void insere_arvore_naocheia(NoArvB* no, char* chave, int NRR, int ordem);
 	void inserir_btree(ArvoreB* arv, char* chave, int NRR);
-	void libera_arvore(ArvoreB* arv, NoArvB* raiz);
 };
 
