@@ -22,7 +22,7 @@ public:
 	vector<Author*>* GetListaDeAutores();
 	vector<Author*>* GetListaDeAutoresOrdenadaPorAppearances();
 	vector<Author*>* QuickSort(vector<Author*>* autores, int inicio, int fim);
-	void PrintListaDeAutores(vector<Author*>* autores);
+	void PrintListaDeAutores();
 
 	vector<vector<Author*>*> hashTable;
 };
