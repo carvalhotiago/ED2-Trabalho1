@@ -60,7 +60,43 @@ vector<int>* split(const string& s, char delimiter) {
 
 Author* GetAuthorById(int id)
 {
-	//TO DO
+	string linha;
+	string idAutor;
+	string nomeAutor;
+
+	vector<Author>* listaTeste = new vector<Author>;
+
+	ifstream autores;
+	autores.open("Data/authors.csv");
+
+	if (autores.is_open())
+	{
+		getline(autores, linha);
+
+		while (getline(autores, linha))
+		{		
+			stringstream ss(linha);
+			getline(ss, idAutor, ',');
+			getline(ss, nomeAutor, ',');
+
+			idAutor = idAutor.substr(1, idAutor.size() - 2);
+			nomeAutor = nomeAutor.substr(1, nomeAutor.size() - 2);
+
+			long convertedId = atol(idAutor.c_str());
+
+			Author* author = new Author(nomeAutor);
+			author->authorName = nomeAutor;
+
+			listaTeste->push_back(*author);
+
+			if (id == convertedId)
+				return author;
+		}
+	}
+	else 
+	{
+		cout << "Erro ao abrir o arquivo!" << endl;
+	}
 }
 
 vector<Author*> GetAuthorsFromBook(Book* book)
