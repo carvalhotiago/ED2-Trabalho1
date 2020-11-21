@@ -58,6 +58,7 @@ vector<int>* split(const string& s, char delimiter) {
 	return tokens;
 }
 
+//Função para procurar um autor através da comparação do id passado como parâmetro
 Author* GetAuthorById(int id)
 {
 	string linha;

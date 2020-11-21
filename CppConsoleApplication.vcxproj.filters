@@ -42,6 +42,18 @@
     <ClCompile Include="BooksHashTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ArvoreVermelhoPreto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NoArvVermPreto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ArvoreB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NoArvB.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="teste.txt" />
@@ -63,6 +75,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BooksHashTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArvoreVermelhoPreto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NoArvVermPreto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArvoreB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NoArvB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
