@@ -21,7 +21,7 @@ public:
 	void PrintHashTable();
 	vector<Author*>* GetListaDeAutores();
 	vector<Author*>* GetListaDeAutoresOrdenadaPorAppearances();
-	vector<Author*>* QuickSort(vector<Author*>* autores);
+	vector<Author*>* QuickSort(vector<Author*>* autores, int inicio, int fim);
 
 	vector<vector<Author*>*> hashTable;
 };

@@ -79,7 +79,36 @@ vector<Author*>* AuthorsHashTable::GetListaDeAutoresOrdenadaPorAppearances()
 	auto autoresOrdenados = QuickSort(autores);
 }
 
-vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores)
+vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inicio, int fim)
 {
-	return nullptr;
+	int i = inicio;
+	int j = fim - 1;
+	int pivot = autores->at((inicio + fim) / 2)->appearances;
+	int aux;
+
+	while (i <= j)
+	{
+		while (autores->at(i)->appearances < pivot && i < fim) {
+			i++;
+		}
+
+		while (autores->at(j)->appearances > pivot && j > inicio) {
+			j--;
+		}
+
+		if (i <= j)
+		{
+			aux = autores->at(i)->appearances;
+			autores->at(i)->appearances = autores->at(j)->appearances;
+			autores->at(j)->appearances = aux;
+			i++;
+			j--;
+		}
+	}
+	if (j > inicio) {
+		QuickSort(autores, inicio, j + 1);
+	}
+	if (i < fim) {
+		QuickSort(autores, i, fim);
+	}
 }
