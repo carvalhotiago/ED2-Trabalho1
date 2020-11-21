@@ -2,6 +2,6 @@
 
 Author::Author(string name)
 {
-	this->appearances = 0;
+	this->appearances = 1;
 	this->authorName = name;
 }

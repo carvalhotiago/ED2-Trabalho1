@@ -26,7 +26,18 @@ void AuthorsHashTable::Insert(Author* author)
 {
 	int hash = HashFunction(author->authorName);
 	auto row = this->hashTable.at(hash);
-	row->push_back(author);
+	
+	auto it = find(row->begin(), row->end(), author);
+	if (it != row->end())
+	{
+		cout << "Author " << author->authorName << " encontrado no indice: " << it - row->begin() << endl;
+		author->appearances++;
+	}
+	else
+	{
+		row->push_back(author);
+	}
+
 }
 
 Author* AuthorsHashTable::Lookup(string name)
@@ -77,6 +88,7 @@ vector<Author*>* AuthorsHashTable::GetListaDeAutoresOrdenadaPorAppearances()
 {
 	auto autores = GetListaDeAutores();
 	auto autoresOrdenados = QuickSort(autores, 0, autores->size());
+	return autoresOrdenados;
 }
 
 vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inicio, int fim)
@@ -111,12 +123,15 @@ vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inici
 	if (i < fim) {
 		QuickSort(autores, i, fim);
 	}
+
+	return autores;
 }
 
-void AuthorsHashTable::PrintListaDeAutores(vector<Author*>* autores)
+void AuthorsHashTable::PrintListaDeAutores()
 {
+	vector<Author*>* autores = this->GetListaDeAutoresOrdenadaPorAppearances();
 	cout << "Lista de autores ordenados por appearances (desc)\n";
-	for (int i = autores->size()-1 ; i >= 0; i++)
+	for (int i = autores->size()-1 ; i >= 0; i--)
 	{
 		auto autor = autores->at(i);
 		cout << autor->authorName << ": " << autor->appearances << endl;

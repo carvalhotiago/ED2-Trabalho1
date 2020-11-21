@@ -145,7 +145,7 @@ int main()
 
 	//Lê dataset
 	ifstream arquivo;
-	arquivo.open("Data/dataset_simp_sem_descricao.csv");
+	arquivo.open("Data/dataset-viciado.csv");
 
 	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
@@ -176,7 +176,7 @@ int main()
 			vector<vector<Book*>*> listaDeVetores;
 
 			// Gera 5 amostras de entradas aleatórias do dataset
-			for (unsigned j = 0; j < 5; j++)
+			for (unsigned j = 0; j < 1; j++)
 			{
 				//Estrutura que irá armazenar cada vetor de livros gerado
 				vector<Book*>* vet = new vector<Book*>();
@@ -252,13 +252,20 @@ int main()
 					vet->push_back(book);
 					arquivo.seekg(0, arquivo.beg);
 
-					booksHashTable->Insert(book);
-
-					vector<Author*> autores = GetAuthorsFromBook(book);
-					for (Author* autor : autores)
-					{
-						authorsHashTable->Insert(autor);
+					
+					if (booksHashTable->Insert(book)) {
+						vector<Author*> autores = GetAuthorsFromBook(book);
+						for (Author* autor : autores)
+						{
+							authorsHashTable->Insert(autor);
+						}
 					}
+					else
+					{
+						//essa iteracao nao foi valida pois o livro lido eh repetido, entao le outro
+						i--;
+					}
+
 				}
 
 				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
@@ -329,8 +336,10 @@ int main()
 		}
 
 
-		booksHashTable->PrintHashTable();
-		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n";
+		//booksHashTable->PrintHashTable();
+		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n\n";
+
+		authorsHashTable->PrintListaDeAutores();
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}
