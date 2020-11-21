@@ -76,7 +76,7 @@ vector<Author*>* AuthorsHashTable::GetListaDeAutores()
 vector<Author*>* AuthorsHashTable::GetListaDeAutoresOrdenadaPorAppearances()
 {
 	auto autores = GetListaDeAutores();
-	auto autoresOrdenados = QuickSort(autores);
+	auto autoresOrdenados = QuickSort(autores, 0, autores->size());
 }
 
 vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inicio, int fim)
