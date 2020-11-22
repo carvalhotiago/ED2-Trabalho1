@@ -52,9 +52,9 @@ NoArvVermPreto* ArvoreVermelhoPreto::RotacaoEsquerda(NoArvVermPreto* no)
 
 NoArvVermPreto* ArvoreVermelhoPreto::Insert(NoArvVermPreto* no, int value)
 {
-	if (no == NULL)
+	if (no->info == 0)
 	{
-		NoArvVermPreto* noAux = new NoArvVermPreto;
+		NoArvVermPreto* noAux = new NoArvVermPreto();
 
 		noAux->info = value;
 		noAux->dir = NULL;
@@ -70,7 +70,6 @@ NoArvVermPreto* ArvoreVermelhoPreto::Insert(NoArvVermPreto* no, int value)
 		no->dir = Insert(no->dir, value);
 
 	//Rotações
-
 	if (no->esq->cor == PRETO && no->dir->cor == VERMELHO)
 		no = RotacaoEsquerda(no);
 
@@ -87,7 +86,7 @@ void ArvoreVermelhoPreto::InsertRaiz(NoArvVermPreto* no, int value)
 {
 	int aux;
 
-	raiz = Insert(raiz, value);
+	raiz = Insert(no, value);
 
 	if (raiz != NULL)
 		raiz->cor = PRETO;

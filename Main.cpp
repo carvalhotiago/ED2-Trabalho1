@@ -9,10 +9,15 @@
 #include "Book.h"
 #include "Bubblesort.h"
 #include "Quicksort.h"
+#include "ArvoreVermelhoPreto.h"
 #include "BooksHashTable.h"
 #include "AuthorsHashTable.h"
+#include "NoArvVermPreto.h"
+#include "ArvoreB.h"
 
 using namespace std;
+
+#define ORDEMARVB 2
 
 template <typename T>
 void PrintListOfBook(vector<T*>& books)
@@ -58,61 +63,6 @@ vector<int>* split(const string& s, char delimiter) {
 	return tokens;
 }
 
-//Função para procurar um autor através da comparação do id passado como parâmetro
-Author* GetAuthorById(int id)
-{
-	string linha;
-	string idAutor;
-	string nomeAutor;
-
-	vector<Author>* listaTeste = new vector<Author>;
-
-	ifstream autores;
-	autores.open("Data/authors.csv");
-
-	if (autores.is_open())
-	{
-		getline(autores, linha);
-
-		while (getline(autores, linha))
-		{		
-			stringstream ss(linha);
-			getline(ss, idAutor, ',');
-			getline(ss, nomeAutor, ',');
-
-			idAutor = idAutor.substr(1, idAutor.size() - 2);
-			nomeAutor = nomeAutor.substr(1, nomeAutor.size() - 2);
-
-			long convertedId = atol(idAutor.c_str());
-
-			Author* author = new Author(nomeAutor);
-			author->authorName = nomeAutor;
-
-			listaTeste->push_back(*author);
-
-			if (id == convertedId)
-				return author;
-		}
-	}
-	else 
-	{
-		cout << "Erro ao abrir o arquivo!" << endl;
-	}
-}
-
-vector<Author*> GetAuthorsFromBook(Book* book)
-{
-	vector<Author*> autores;
-
-	for (int i = 0; i < book->authors->size(); i++)
-	{
-		Author* autor = GetAuthorById(book->authors->at(i));
-		autores.push_back(autor);
-	}
-
-	return autores;
-}
-
 int main()
 {
 	//Setta a semente para o valor do tempo atual
@@ -146,22 +96,10 @@ int main()
 
 	//Lê dataset
 	ifstream arquivo;
-	arquivo.open("Data/dataset-viciado.csv");
+	arquivo.open("Data/datasetCerto.txt");
 
 	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
-
-
-
-
-
-
-
-
-
-	BooksHashTable* booksHashTable = new BooksHashTable(valoresDeN.at(0));
-	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(valoresDeN.at(0));
-
 
 	if (arquivo.is_open())
 	{
@@ -171,7 +109,7 @@ int main()
 		arquivo.seekg(0, arquivo.beg);
 
 		// Para cada um dos valores de N passados
-		for (int k = 0; k < valoresDeN.size(); k++)
+		for (int k = 0; k < 100; k++)
 		{
 			//Estrutura que irá armazenar os 5 vetores de livros preenchidos aleatoriamente
 			vector<vector<Book*>*> listaDeVetores;
@@ -183,7 +121,7 @@ int main()
 				vector<Book*>* vet = new vector<Book*>();
 
 				//Cada uma das 5 amostras geradas terá o mesmo tamanho, que é um dos Ns passados
-				for (int i = 0; i < valoresDeN.at(k); i++)
+				for (int i = 0; i < 100; i++)
 				{
 					if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
 
@@ -201,9 +139,9 @@ int main()
 
 					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
 					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
-					while(str.empty() || str.back() != '"' || str.at(0) != '"')
-					{ 					
-						getline(arquivo, str);				
+					while (str.empty() || str.back() != '"' || str.at(0) != '"')
+					{
+						getline(arquivo, str);
 					}
 
 					Book* book = new Book();
@@ -233,15 +171,15 @@ int main()
 						vector<int>* authorsIds = split(text, ',');
 						book->authors = authorsIds;
 					}
-				
+
 					if (registro->at(2) != "")
 					{
 						string text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
 						vector<int>* categories = split(text, ',');
 						book->categories = categories;
-					}			
-					
-					book->bestsellersRank = registro->at(1);					
+					}
+
+					book->bestsellersRank = registro->at(1);
 					book->edition = registro->at(3);
 					book->id = registro->at(4);
 					book->isbn10 = registro->at(5);
@@ -253,94 +191,86 @@ int main()
 					vet->push_back(book);
 					arquivo.seekg(0, arquivo.beg);
 
-					
-					if (booksHashTable->Insert(book)) {
-						vector<Author*> autores = GetAuthorsFromBook(book);
-						for (Author* autor : autores)
-						{
-							authorsHashTable->Insert(autor);
-						}
-					}
-					else
-					{
-						//essa iteracao nao foi valida pois o livro lido eh repetido, entao le outro
-						i--;
-					}
+					//Seção referente à árvores
+					ArvoreVermelhoPreto* arv = new ArvoreVermelhoPreto;
+					NoArvVermPreto* no = new NoArvVermPreto;
+					ArvoreB* arvB = new ArvoreB;
+					NoArvB* noB = new NoArvB;
 
+					long idBook = atol(book->id.c_str());
+
+					arv->InsertRaiz(no, idBook);
+					arvB = arvB->CriaArvore(ORDEMARVB);
+					arvB->Insert(arvB, idBook);
+
+					//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
+					listaDeVetores.push_back(vet);
 				}
 
-				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
-				listaDeVetores.push_back(vet);
-			}
+				/*
+	#pragma region BubbleSort
+				//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
+				Bubblesort bubble;
+				saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
+				double somaTemposBubble = 0.0;
+				int somaComparacoes = 0;
+				int somaCopiasRegistros = 0;
+				for (int i = 0; i < listaDeVetores.size(); i++)
+				{
+					vector<Book*>* vectorAtual = listaDeVetores.at(i);
 
-			/*
-#pragma region BubbleSort
-			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
-			Bubblesort bubble;
-			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
-			double somaTemposBubble = 0.0;
-			int somaComparacoes = 0;
-			int somaCopiasRegistros = 0;
-			for (int i = 0; i < listaDeVetores.size(); i++)
-			{
-				vector<Book*>* vectorAtual = listaDeVetores.at(i);
+					long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
 
-				long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
+					saida << "Amostra " << i << ": " << tempo << " milliseconds, " << bubble.numeroDeComparacoes << " comparacoes, " << bubble.numeroDeCopiasRegistro << " copias de registros." << endl;
+					somaTemposBubble += tempo;
+					somaComparacoes += bubble.numeroDeComparacoes;
+					somaCopiasRegistros += bubble.numeroDeCopiasRegistro;
+				}
+				auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
+				saida << "Tempo medio: " << tempoMedioBubble << " milliseconds." << endl;
 
-				saida << "Amostra " << i << ": " << tempo << " milliseconds, " << bubble.numeroDeComparacoes << " comparacoes, " << bubble.numeroDeCopiasRegistro << " copias de registros." << endl;
-				somaTemposBubble += tempo;
-				somaComparacoes += bubble.numeroDeComparacoes;
-				somaCopiasRegistros += bubble.numeroDeCopiasRegistro;
-			}
-			auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
-			saida << "Tempo medio: " << tempoMedioBubble << " milliseconds." << endl;
+				auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
+				saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
 
-			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
-			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
-
-			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
-			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
-#pragma endregion
-*/
+				auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
+				saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
+	#pragma endregion
+	*/
 
 
 
 #pragma region QuickSort
-			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
-			Quicksort quick;
-			saida << "\tQuickSort - N:" << valoresDeN.at(k) << endl;
-			double somaTemposQuick = 0.0;
-			int somaComparacoes = 0;
-			int somaCopiasRegistros = 0;
-			for (int i = 0; i < listaDeVetores.size(); i++)
-			{
-				vector<Book*>* vectorAtual = listaDeVetores.at(i);
+	//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
+			/*	Quicksort quick;
+				saida << "\tQuickSort - N:" << valoresDeN.at(k) << endl;
+				double somaTemposQuick = 0.0;
+				int somaComparacoes = 0;
+				int somaCopiasRegistros = 0;
+				for (int i = 0; i < listaDeVetores.size(); i++)
+				{
+					vector<Book*>* vectorAtual = listaDeVetores.at(i);
 
-				long tempo = quick.Execute(*vectorAtual, 0, vectorAtual->size());
+					long tempo = quick.Execute(*vectorAtual, 0, vectorAtual->size());
 
-				saida << "Amostra " << i << ": " << tempo << " milliseconds, " << quick.numComparacoes << " comparacoes, " << quick.numCopiasRegistros << " copias de registros." << endl;
-				somaTemposQuick += tempo;
-				somaComparacoes += quick.numComparacoes;
-				somaCopiasRegistros += quick.numCopiasRegistros;
-			}
+					saida << "Amostra " << i << ": " << tempo << " milliseconds, " << quick.numComparacoes << " comparacoes, " << quick.numCopiasRegistros << " copias de registros." << endl;
+					somaTemposQuick += tempo;
+					somaComparacoes += quick.numComparacoes;
+					somaCopiasRegistros += quick.numCopiasRegistros;
+				}
 
-			auto tempoMedioQuicksort = somaTemposQuick / listaDeVetores.size();
-			saida << "Tempo medio: " << tempoMedioQuicksort << " milliseconds." << endl;
+				auto tempoMedioQuicksort = somaTemposQuick / listaDeVetores.size();
+				saida << "Tempo medio: " << tempoMedioQuicksort << " milliseconds." << endl;
 
-			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
-			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
+				auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
+				saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
 
-			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
-			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
+				auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
+				saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;*/
 #pragma endregion
+			}
+			
+		}	
 
-		}
-
-
-		//booksHashTable->PrintHashTable();
-		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n\n";
-
-		authorsHashTable->PrintListaDeAutores();
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}

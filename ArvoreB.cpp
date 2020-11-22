@@ -7,13 +7,13 @@
 const int T_CHAVE = 9;
 
 /* Função que cria a árvore */
-ArvoreB* ArvoreB::criar_arvore(int ordem) {
+ArvoreB* ArvoreB::CriaArvore(int ordem) {
 	int i;
 	ArvoreB* arvore = new ArvoreB;
 
 	//Alocação da raiz da árvore
 	arvore->raiz = new NoArvB;
-	arvore->raiz->keys = new vector<string>;
+	arvore->raiz->keys = new vector<int>;
 	arvore->raiz->isFolha = 1;
 	arvore->raiz->nodesNumber = 0;
 	arvore->raiz->nosFilhos = new vector<NoArvB*>;
@@ -23,22 +23,22 @@ ArvoreB* ArvoreB::criar_arvore(int ordem) {
 }
 
 /* Função que aloca um novo nó */
-NoArvB* ArvoreB::aloca_no(int ordem) {
+NoArvB* ArvoreB::AlocaNo(int ordem) {
 	int i;
 	NoArvB* novo = new NoArvB;
-	novo->keys = new vector<string>;
+	novo->keys = new vector<int>;
 	novo->nosFilhos = new vector<NoArvB*>;
 
 	return novo;
 }
 
 /* Função que reparte um nó da árvore e promove uma chave */
-void ArvoreB::repartir_filho(NoArvB* pai, int i, int ordem) {
+void ArvoreB::ReparteArvoreNoFilho(NoArvB* pai, int i, int ordem) {
 
 	int j;
 
 	//z é o novo nó criado com a repartição
-	NoArvB* z = aloca_no(ordem);
+	NoArvB* z = AlocaNo(ordem);
 
 	//y é o nó que será repartido
 	NoArvB* y = pai->nosFilhos->at(i);
@@ -82,7 +82,7 @@ void ArvoreB::repartir_filho(NoArvB* pai, int i, int ordem) {
 }
 
 /* Função que insere uma nova chave em um nó que não está cheio */
-void ArvoreB::insere_arvore_naocheia(NoArvB* no, char* chave, int NRR, int ordem) {
+void ArvoreB::InsertKey(NoArvB* no, int chave, int ordem) {
 
 	//Numero de nós é decrementado por 1 pois em C vetores começam em 0 e precisaremos acessar a chave 0 em algum momento
 	int i = no->nodesNumber - 1;
@@ -115,7 +115,7 @@ void ArvoreB::insere_arvore_naocheia(NoArvB* no, char* chave, int NRR, int ordem
 		if (no->nosFilhos->at(i)->nodesNumber == ordem - 1) {
 
 			//Reparte-se o filho para caber a nova chave
-			repartir_filho(no, i, ordem);
+			ReparteArvoreNoFilho(no, i, ordem);
 
 			//Decide-se quais dos dois novos filhos iremos entrar para inserir a nova chave
 			if ((no->keys->at(i) < chave) < 0) {
@@ -124,18 +124,18 @@ void ArvoreB::insere_arvore_naocheia(NoArvB* no, char* chave, int NRR, int ordem
 		}
 
 		//Insere-se a chave no filho decidido no if anterior
-		insere_arvore_naocheia(no->nosFilhos->at(i), chave, NRR, ordem);
+		InsertKey(no->nosFilhos->at(i), chave, ordem);
 	}
 }
 
 /* Função que insere uma nova chave na árvore */
-void ArvoreB::inserir_btree(ArvoreB* arv, char* chave, int NRR) {
+void ArvoreB::Insert(ArvoreB* arv, int chave) {
 
 	NoArvB* r = arv->raiz;
 
 	//Caso em que deseja-se inserir um novo nó em uma raiz vazia
 	if (arv->raiz->nodesNumber == 0) {
-		arv->raiz->keys->at(0) = chave;
+		arv->raiz->keys->push_back(chave);
 		arv->raiz->nodesNumber++;
 	}
 
@@ -146,7 +146,7 @@ void ArvoreB::inserir_btree(ArvoreB* arv, char* chave, int NRR) {
 		if (r->nodesNumber == arv->ordem - 1) {
 
 			//Criação de um novo nó que se tornará a nova raiz
-			NoArvB* s = aloca_no(arv->ordem);
+			NoArvB* s = AlocaNo(arv->ordem);
 			arv->raiz = s;
 			s->isFolha = 0;
 			s->nodesNumber = 0;
@@ -155,15 +155,15 @@ void ArvoreB::inserir_btree(ArvoreB* arv, char* chave, int NRR) {
 			s->nosFilhos->at(0) = r;
 
 			//Reparte-se a raiz para que ela tenha 2 filhos
-			repartir_filho(s, 0, arv->ordem);
+			ReparteArvoreNoFilho(s, 0, arv->ordem);
 
 			//Insere-se o novo nó
-			insere_arvore_naocheia(s, chave, NRR, arv->ordem);
+			InsertKey(s, chave, arv->ordem);
 		}
 
 		//Caso em que a raiz não está cheia
 		else {
-			insere_arvore_naocheia(r, chave, NRR, arv->ordem);
+			InsertKey(r, chave, arv->ordem);
 		}
 	} /* else */
 }

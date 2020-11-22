@@ -5,7 +5,6 @@ class ArvoreVermelhoPreto
 {
 public:
 	void TrocaCorDoNo(NoArvVermPreto* no);
-	int CorDoNo(NoArvVermPreto* no);
 	NoArvVermPreto* RotacaoDireita(NoArvVermPreto* no);
 	NoArvVermPreto* RotacaoEsquerda(NoArvVermPreto* no);
 	NoArvVermPreto* Insert(NoArvVermPreto* no, int value);

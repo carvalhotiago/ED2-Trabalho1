@@ -7,7 +7,8 @@ using namespace std;
 class NoArvB
 {
 public:
-	vector<string> *keys;
+	NoArvB();
+	vector<int> *keys;
 	int isFolha;
 	int nodesNumber;
 	vector<NoArvB*> *nosFilhos;
