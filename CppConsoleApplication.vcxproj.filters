@@ -42,9 +42,16 @@
     <ClCompile Include="BooksHashTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Author.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AuthorsHashTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="teste.txt" />
+    <Text Include="entrada.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Book.h">
@@ -63,6 +70,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BooksHashTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthorsHashTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Author.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CppConsoleApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

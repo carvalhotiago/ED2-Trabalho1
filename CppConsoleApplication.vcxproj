@@ -140,6 +140,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Author.cpp" />
+    <ClCompile Include="AuthorsHashTable.cpp" />
     <ClCompile Include="Book.cpp" />
     <ClCompile Include="BooksHashTable.cpp" />
     <ClCompile Include="files.cpp" />
@@ -151,12 +153,16 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="entrada.txt" />
     <Text Include="teste.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Author.h" />
+    <ClInclude Include="AuthorsHashTable.h" />
     <ClInclude Include="Book.h" />
     <ClInclude Include="BooksHashTable.h" />
     <ClInclude Include="Bubblesort.h" />
+    <ClInclude Include="CppConsoleApplication.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="No.h" />
     <ClInclude Include="Quicksort.h" />
