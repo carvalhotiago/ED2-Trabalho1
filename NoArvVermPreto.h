@@ -7,5 +7,6 @@ public:
 	int info;
 	NoArvVermPreto* esq;
 	NoArvVermPreto* dir;
+	NoArvVermPreto* pai;
 };
 

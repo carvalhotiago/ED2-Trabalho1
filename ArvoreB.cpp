@@ -50,13 +50,13 @@ void ArvoreB::ReparteArvoreNoFilho(NoArvB* pai, int i, int ordem) {
 
 	//Transfere-se metade das chaves de y para z
 	for (j = 0; j < (int)ceil((double)ordem / 2) - 1; j++) {
-		z->keys->at(j)= y->keys->at(j + (ordem / 2));
+		z->keys->push_back(y->keys->at(j + (ordem / 2)));
 	}
 
 	//Caso y não seja folha(não tenha filhos), transfere-se metade dos filhos de z para y
 	if (!y->isFolha) {
 		for (j = 0; j < (int)((ordem + 1) / 2); j++) {
-			z->nosFilhos->at(j) = y->nosFilhos->at(j + (ordem / 2));
+			z->nosFilhos->push_back(y->nosFilhos->at(j + (ordem / 2)));
 		}
 	}
 
@@ -65,19 +65,19 @@ void ArvoreB::ReparteArvoreNoFilho(NoArvB* pai, int i, int ordem) {
 
 	//Reorganiza-se os filhos do nó pai para inserir o novo filho 
 	for (j = pai->nodesNumber; j >= i + 1; j--) {
-		pai->nosFilhos[j + 1] = pai->nosFilhos[j];
+		pai->nosFilhos->push_back(pai->nosFilhos->at(j));
 	}
 
 	//Liga-se o novo filho ao nó pai
-	pai->nosFilhos->at(i + 1) = z;
+	pai->nosFilhos->push_back(z);
 
 	//Reorganiza-se as chave do pai para inserir a chave promovida
 	for (j = pai->nodesNumber - 1; j >= i; j--) {
-		pai->keys->at(j + 1) = pai->keys->at(j);
+		pai->keys->push_back(pai->keys->at(j));
 	}
 
 	//Insere-se no nó pai, a chave promovida
-	pai->keys->at(i) = y->keys->at((int)(ordem / 2) - 1);
+	pai->keys->push_back(y->keys->at((int)(ordem / 2) - 1));
 	pai->nodesNumber++;
 }
 
@@ -93,12 +93,12 @@ void ArvoreB::InsertKey(NoArvB* no, int chave, int ordem) {
 		//Percorre as chaves do final para o começo até encontrar a posição certa de inserir a chave ou chegar à ultima chave 
 		//Enquanto percorre, vai passando todas as chaves para a posição à direita
 		while (i >= 0 && (no->keys->at(i) > chave) > 0) {
-			no->keys->at(i + 1) = no->keys->at(i);
+			no->keys->push_back(no->keys->at(i));
 			i--;
 		}
 
 		//Insere a chave na posição encontrada
-		no->keys->at(i + 1) = chave;
+		no->keys->push_back(chave);
 		no->nodesNumber++;
 	}
 
@@ -152,7 +152,7 @@ void ArvoreB::Insert(ArvoreB* arv, int chave) {
 			s->nodesNumber = 0;
 
 			//A antiga raiz se torna filha da nova raiz
-			s->nosFilhos->at(0) = r;
+			s->nosFilhos->push_back(r);
 
 			//Reparte-se a raiz para que ela tenha 2 filhos
 			ReparteArvoreNoFilho(s, 0, arv->ordem);

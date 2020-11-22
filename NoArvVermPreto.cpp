@@ -7,4 +7,5 @@ NoArvVermPreto::NoArvVermPreto()
 	cor == 1;
 	esq = NULL;
 	dir = NULL;
+	pai = NULL;
 }

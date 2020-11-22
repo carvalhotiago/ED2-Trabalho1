@@ -12,5 +12,6 @@ public:
 	int isFolha;
 	int nodesNumber;
 	vector<NoArvB*> *nosFilhos;
+	NoArvB* Busca(int k);
 };
 

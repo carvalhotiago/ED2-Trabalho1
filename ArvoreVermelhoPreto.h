@@ -4,12 +4,11 @@
 class ArvoreVermelhoPreto
 {
 public:
-	void TrocaCorDoNo(NoArvVermPreto* no);
-	NoArvVermPreto* RotacaoDireita(NoArvVermPreto* no);
-	NoArvVermPreto* RotacaoEsquerda(NoArvVermPreto* no);
-	NoArvVermPreto* Insert(NoArvVermPreto* no, int value);
-	void InsertRaiz(NoArvVermPreto* no, int value);
-	void BalancearArvore(NoArvVermPreto* no);
 	NoArvVermPreto* raiz;
+	void RotacaoDireita(NoArvVermPreto** raiz, NoArvVermPreto* y);
+	void RotacaoEsquerda(NoArvVermPreto** raiz, NoArvVermPreto* x);
+	void Insert(NoArvVermPreto** raiz, int info);
+	NoArvVermPreto* Busca(int data);
+	void InsertAux(NoArvVermPreto** root, NoArvVermPreto* z);
 };
 

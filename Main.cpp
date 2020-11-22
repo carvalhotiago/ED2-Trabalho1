@@ -107,6 +107,8 @@ int main()
 		arquivo.seekg(0, arquivo.end);
 		unsigned int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
+		ArvoreB* arvB = new ArvoreB;
+		arvB = arvB->CriaArvore(ORDEMARVB);
 
 		// Para cada um dos valores de N passados
 		for (int k = 0; k < 100; k++)
@@ -193,14 +195,12 @@ int main()
 
 					//Seção referente à árvores
 					ArvoreVermelhoPreto* arv = new ArvoreVermelhoPreto;
-					NoArvVermPreto* no = new NoArvVermPreto;
-					ArvoreB* arvB = new ArvoreB;
+					NoArvVermPreto* no = new NoArvVermPreto;					
 					NoArvB* noB = new NoArvB;
 
 					long idBook = atol(book->id.c_str());
 
-					arv->InsertRaiz(no, idBook);
-					arvB = arvB->CriaArvore(ORDEMARVB);
+					arv->Insert(&no, idBook);					
 					arvB->Insert(arvB, idBook);
 
 					//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras

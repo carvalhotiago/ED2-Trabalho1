@@ -5,102 +5,195 @@
 #define PRETO 0
 #define VERMELHO 1
 
-void ArvoreVermelhoPreto::TrocaCorDoNo(NoArvVermPreto* no)
+void ArvoreVermelhoPreto::RotacaoDireita(NoArvVermPreto** raiz, NoArvVermPreto* y)
 {
-	//Troca a cor do nó
-	if (no->cor == 0)
-		no->cor = 1;
-	else
-		no->cor = 0;
-
-	//Troca a cor do nó a direita
-	if (no->dir->cor == 0)
-		no->dir->cor = 1;
-	else
-		no->dir->cor = 0;
-
-	//Troca a cor do nó a esquerda
-	if (no->esq->cor == 0)
-		no->esq->cor = 1;
-	else
-		no->esq->cor = 0;
+	NoArvVermPreto* x = y->esq;
+	y->esq = x->dir;
+	if (x->dir != NULL)
+		x->dir->pai = y;
+	x->pai = y->pai;
+	if (x->pai == NULL)
+		(*raiz) = x;
+	else if (y == y->pai->esq)
+		y->pai->esq = x;
+	else y->pai->dir = x;
+	x->dir = y;
+	y->pai = x;
 }
 
-NoArvVermPreto* ArvoreVermelhoPreto::RotacaoDireita(NoArvVermPreto* no)
+void ArvoreVermelhoPreto::RotacaoEsquerda(NoArvVermPreto** raiz, NoArvVermPreto* x)
 {
-	NoArvVermPreto* noAux = no->esq;
+	//y stored pointer of right child of x
+	NoArvVermPreto* y = x->dir;
 
-	no->esq = noAux->dir;
-	noAux->dir = no;
-	noAux->cor = no->cor;
-	no->cor = VERMELHO;
+	//store y's esq subtree's pointer as x's dir child
+	x->dir = y->esq;
 
-	return noAux;
+	//update pai pointer of x's dir
+	if (x->dir != NULL)
+		x->dir->pai = x;
+
+	//update y's pai pointer
+	y->pai = x->pai;
+
+	// if x's pai is null make y as root of tree
+	if (x->pai == NULL)
+		(*raiz) = y;
+
+	// store y at the place of x
+	else if (x == x->pai->esq)
+		x->pai->esq = y;
+	else    x->pai->dir = y;
+
+	// make x as esq child of y
+	y->esq = x;
+
+	//update pai pointer of x
+	x->pai = y;
 }
 
-NoArvVermPreto* ArvoreVermelhoPreto::RotacaoEsquerda(NoArvVermPreto* no)
+// Utility function to insert newly node in RedBlack tree
+void ArvoreVermelhoPreto::Insert(NoArvVermPreto** raiz, int info)
 {
-	NoArvVermPreto* noAux = no->dir;
+	// Allocate memory for new node
+	NoArvVermPreto* z = new NoArvVermPreto;
+	z->info = info;
+	z->esq = z->dir = z->pai = NULL;
 
-	no->dir = noAux->esq;
-	noAux->esq = no;
-	noAux->cor = no->cor;
-	no->cor = VERMELHO;
-
-	return noAux;
-}
-
-NoArvVermPreto* ArvoreVermelhoPreto::Insert(NoArvVermPreto* no, int value)
-{
-	if (no->info == 0)
+	//if root is null make z as root
+	if (raiz == NULL)
 	{
-		NoArvVermPreto* noAux = new NoArvVermPreto();
+		z->cor = PRETO;
+		(*raiz) = z;
+	}
+	else
+	{
+		NoArvVermPreto* y = NULL;
+		NoArvVermPreto* x = (*raiz);
 
-		noAux->info = value;
-		noAux->dir = NULL;
-		noAux->esq = NULL;
-		noAux->cor = VERMELHO;
+		// Follow standard BST insert steps to first insert the node
+		while (x != NULL)
+		{
+			y = x;
+			if (z->info < x->info)
+				x = x->esq;
+			else
+				x = x->dir;
+		}
+		z->pai = y;
+		if (z->info > y->info)
+			y->dir = z;
+		else
+			y->esq = z;
+		z->cor = VERMELHO;
 
-		return noAux;
+		// call insertFixUp to fix reb-black tree's property if it
+		// is voilated due to insertion.
+		InsertAux(raiz, z);
+	}
+}
+
+NoArvVermPreto* ArvoreVermelhoPreto::Busca(int data) 
+{
+	NoArvVermPreto *temp = raiz;
+	if (temp == nullptr)
+		return NULL;
+
+	while (temp) {
+		if (data == temp->info) 
+			return temp;
+		else if (data < temp->info)
+			temp = temp->esq;
+		else 
+			temp = temp->dir;
 	}
 
-	if (value < no->info)
-		no->esq = Insert(no->esq, value);
-	else
-		no->dir = Insert(no->dir, value);
-
-	//Rotações
-	if (no->esq->cor == PRETO && no->dir->cor == VERMELHO)
-		no = RotacaoEsquerda(no);
-
-	if (no->esq->cor == VERMELHO && no->esq->esq->cor == VERMELHO)
-		no = RotacaoDireita(no);
-
-	if (no->dir->cor == VERMELHO && no->esq->cor == VERMELHO)
-		TrocaCorDoNo(no);
-
-	return no;
+	return NULL;
 }
 
-void ArvoreVermelhoPreto::InsertRaiz(NoArvVermPreto* no, int value)
+void ArvoreVermelhoPreto::InsertAux(NoArvVermPreto** root, NoArvVermPreto* z)
 {
-	int aux;
+	// iterate until z is not the root and z's pai cor is red
+	while (z != *root && z != (*root)->esq && z != (*root)->dir && z->pai->cor == 'R')
+	{
+		NoArvVermPreto* y;
 
-	raiz = Insert(no, value);
+		// Find uncle and store uncle in y
+		if (z->pai && z->pai->pai && z->pai == z->pai->pai->esq)
+			y = z->pai->pai->dir;
+		else
+			y = z->pai->pai->esq;
 
-	if (raiz != NULL)
-		raiz->cor = PRETO;
-}
+		// If uncle is RED, do following
+		// (i)  Change cor of pai and uncle as BLACK
+		// (ii) Change cor of grandpai as RED
+		// (iii) Move z to grandpai
+		if (!y)
+			z = z->pai->pai;
+		else if (y->cor == VERMELHO)
+		{
+			y->cor = PRETO;
+			z->pai->cor = PRETO;
+			z->pai->pai->cor = VERMELHO;
+			z = z->pai->pai;
+		}
 
+		// Uncle is BLACK, there are four cases (LL, LR, RL and RR)
+		else
+		{
+			// esq-esq (LL) case, do following
+			// (i)  Swap cor of pai and grandpai
+			// (ii) dir Rotate Grandpai
+			if (z->pai == z->pai->pai->esq &&
+				z == z->pai->esq)
+			{
+				char ch = z->pai->cor;
+				z->pai->cor = z->pai->pai->cor;
+				z->pai->pai->cor = ch;
+				RotacaoDireita(root, z->pai->pai);
+			}
 
-void ArvoreVermelhoPreto::BalancearArvore(NoArvVermPreto* no)
-{
-	if (no->dir->cor == VERMELHO)
-		no = RotacaoEsquerda(no);
+			// esq-dir (LR) case, do following
+			// (i)  Swap cor of current node  and grandpai
+			// (ii) esq Rotate pai
+			// (iii) dir Rotate Grand pai
+			if (z->pai && z->pai->pai && z->pai == z->pai->pai->esq &&
+				z == z->pai->dir)
+			{
+				char ch = z->cor;
+				z->cor = z->pai->pai->cor;
+				z->pai->pai->cor = ch;
+				RotacaoEsquerda(root, z->pai);
+				RotacaoDireita(root, z->pai->pai);
+			}
 
-	if (no->esq != NULL && no->esq->cor == VERMELHO && no->esq->esq->cor == VERMELHO)
-		no = RotacaoDireita(no);
+			// dir-dir (RR) case, do following
+			// (i)  Swap cor of pai and grandpai
+			// (ii) esq Rotate Grandpai
+			if (z->pai && z->pai->pai &&
+				z->pai == z->pai->pai->dir &&
+				z == z->pai->dir)
+			{
+				char ch = z->pai->cor;
+				z->pai->cor = z->pai->pai->cor;
+				z->pai->pai->cor = ch;
+				RotacaoEsquerda(root, z->pai->pai);
+			}
 
-	if (no->dir->cor == VERMELHO && no->esq->cor == VERMELHO)
-		TrocaCorDoNo(no);
+			// dir-esq (RL) case, do following
+			// (i)  Swap cor of current node  and grandpai
+			// (ii) dir Rotate pai
+			// (iii) esq Rotate Grand pai
+			if (z->pai && z->pai->pai && z->pai == z->pai->pai->dir &&
+				z == z->pai->esq)
+			{
+				char ch = z->cor;
+				z->cor = z->pai->pai->cor;
+				z->pai->pai->cor = ch;
+				RotacaoDireita(root, z->pai);
+				RotacaoEsquerda(root, z->pai->pai);
+			}
+		}
+	}
+	(*root)->cor = PRETO; //keep root always black
 }
