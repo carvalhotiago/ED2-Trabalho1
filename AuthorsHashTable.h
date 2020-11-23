@@ -10,20 +10,26 @@ class AuthorsHashTable
 private:
 	int numeroDeColisoes;
 	int tableSize;
+	int m1;
+	int m2;
 
 public:
 	AuthorsHashTable(int size);
 	~AuthorsHashTable();
-	int HashFunction(string name);
-	void Insert(Author* author);
+	bool Insert(Author* author);
 	Author* Lookup(string key);
+
+	int HashFunction(string nome, int i);
+	int HashFunction1(int key);
+	int HashFunction2(int key);
+
 	int GetNumeroDeColisoes();
 	void PrintHashTable();
 	vector<Author*>* GetListaDeAutores();
 	vector<Author*>* GetListaDeAutoresOrdenadaPorAppearances();
 	vector<Author*>* QuickSort(vector<Author*>* autores, int inicio, int fim);
-	void PrintListaDeAutores();
+	int GetSomaAsciiDosCaracteres(string name);
 
-	vector<vector<Author*>*> hashTable;
+	vector<Author*>* hashTable = new vector<Author*>();
 };
 

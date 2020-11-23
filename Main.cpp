@@ -67,7 +67,7 @@ Author* GetAuthorById(int id)
 	vector<Author>* listaTeste = new vector<Author>;
 
 	ifstream autores;
-	autores.open("Data/authors.csv");
+	autores.open("Data/authors-grande.csv");
 
 	if (autores.is_open())
 	{
@@ -92,6 +92,7 @@ Author* GetAuthorById(int id)
 			if (id == convertedId)
 				return author;
 		}
+		return new Author("Desconhecido");
 	}
 	else 
 	{
@@ -145,7 +146,7 @@ int main()
 
 	//Lê dataset
 	ifstream arquivo;
-	arquivo.open("Data/dataset-viciado.csv");
+	arquivo.open("Data/dataset_simp_sem_descricao.csv");
 
 	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
@@ -159,7 +160,7 @@ int main()
 
 
 	BooksHashTable* booksHashTable = new BooksHashTable(valoresDeN.at(0));
-	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(valoresDeN.at(0));
+	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(valoresDeN.at(0)*1.3);
 
 
 	if (arquivo.is_open())
@@ -339,7 +340,7 @@ int main()
 		//booksHashTable->PrintHashTable();
 		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n\n";
 
-		authorsHashTable->PrintListaDeAutores();
+		authorsHashTable->PrintHashTable();
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}

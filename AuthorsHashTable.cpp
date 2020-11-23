@@ -3,78 +3,121 @@
 
 using namespace std;
 
-AuthorsHashTable::AuthorsHashTable(int size)
+AuthorsHashTable::AuthorsHashTable(int m1)
 {
-	hashTable.resize(size);
-	for (int i = 0; i < size; i++)
+	this->tableSize = m1;
+	this->m1 = m1;
+	this->m2 = m1-1;
+
+	hashTable->resize(m1);
+
+	for (int i = 0; i < tableSize; i++)
 	{
-		hashTable.at(i) = new vector<Author*>();
+		hashTable->at(i) = new Author("vazio");
 	}
-	tableSize = size;
 	numeroDeColisoes = 0;
 }
 
-int AuthorsHashTable::HashFunction(string name)
+int AuthorsHashTable::GetSomaAsciiDosCaracteres(string name)
 {
 	int soma = 0;
 	for (int i = 0; i < name.size(); i++)
 		soma = soma + name.at(i);
-	return soma % tableSize;
+	return soma;
 }
 
-void AuthorsHashTable::Insert(Author* author)
+int AuthorsHashTable::HashFunction(string nome, int i)
 {
-	int hash = HashFunction(author->authorName);
-	auto row = this->hashTable.at(hash);
+	int key = GetSomaAsciiDosCaracteres(nome);	
+	return (HashFunction1(key) + i * HashFunction2(key)) % this->m1;
+}
+
+int AuthorsHashTable::HashFunction1(int key)
+{
+	return key % this->m1;
+}
+
+int AuthorsHashTable::HashFunction2(int key)
+{
+	return 1 + (key % this->m2);
+}
+
+bool AuthorsHashTable::Insert(Author* author)
+{
+	int i = 0;	//numero de tentativas de inserção
+	int hash = HashFunction(author->authorName, i);
+
+	//elemento encontrado na posicao cauculada
+	auto autorAux = this->hashTable->at(hash);
 	
-	auto it = find(row->begin(), row->end(), author);
-	if (it != row->end())
-	{
-		cout << "Author " << author->authorName << " encontrado no indice: " << it - row->begin() << endl;
-		author->appearances++;
+	//Se autorAux tem o mesmo nome, esse autor ja foi inserido, entao apenas incrementamos sua ocorrencia e retornamos
+	if (autorAux->authorName == author->authorName) {
+		autorAux->appearances++;
+		return true;
 	}
-	else
+
+	//Enquanto nao encontrar posicao vazia, ocorrem colisoes
+	while (autorAux->authorName != "vazio" && i < this->tableSize - 1)
 	{
-		row->push_back(author);
+		this->numeroDeColisoes++;
+		i++;
+		hash = HashFunction(author->authorName, i);
+		autorAux = hashTable->at(hash);
 	}
+
+	this->hashTable->at(hash) = author;
+	return true;
 
 }
 
 Author* AuthorsHashTable::Lookup(string name)
 {
-	int hash = HashFunction(name);
-	auto row = this->hashTable.at(hash);
+	int i = 0;	//numero de tentativas
+	int hash = HashFunction(name, i);
 
-	if (row->empty()) return nullptr;
+	//elemento encontrado na posicao calculada
+	auto autorAux = this->hashTable->at(hash);
 
-	Author* author;
-	for (int i = 0; i < row->size(); i++)
-	{
-		author = row->at(i);
-		if (author->authorName == name)
-			return author;		
+	//Se autorAux tem o mesmo nome, esse autor ja foi inserido, entao apenas incrementamos sua ocorrencia e retornamos
+	if (autorAux->authorName == name) {
+		return autorAux;
 	}
+
+	//Enquanto nao encontrar posicao vazia, ocorrem colisoes
+	while (autorAux->authorName != name && i < this->tableSize - 1)
+	{
+		i++;
+		hash = HashFunction(name, i);
+		autorAux = hashTable->at(hash);
+	}
+
+	if (autorAux->authorName == name)
+		return autorAux;
 	return nullptr;
 
 }
 
 int AuthorsHashTable::GetNumeroDeColisoes()
 {
-	int numeroDeColisoes = 0;
-	for (vector<Author*>* row : this->hashTable)
-	{
-		if (row->size() > 1)		//Se uma linha tem mais de 1 registro, eh pq houve colisao
-			numeroDeColisoes += row->size() - 1;
-	}
-	return numeroDeColisoes;
+	return this->numeroDeColisoes;
 }
 
+void AuthorsHashTable::PrintHashTable()
+{
+	for (int i = 0; i < this->tableSize; i++)
+	{
+		auto author = this->hashTable->at(i);
+		cout << i << ": " << author->authorName << " - " << author->appearances << endl;
+	}
+}
+
+/*
 vector<Author*>* AuthorsHashTable::GetListaDeAutores()
 {
 	vector<Author*>* autores = new vector<Author*>();
 	for (int i = 0; i < this->tableSize; i++)
 	{
-		vector<Author*>* row = this->hashTable.at(i);
+		vector<Author*>* row = hashTable.at(i);
 		for (int j = 0; j < row->size(); j++)
 		{
 			autores->push_back(row->at(j));
@@ -136,6 +179,6 @@ void AuthorsHashTable::PrintListaDeAutores()
 		auto autor = autores->at(i);
 		cout << autor->authorName << ": " << autor->appearances << endl;
 	}
-}
+}*/
 
 
