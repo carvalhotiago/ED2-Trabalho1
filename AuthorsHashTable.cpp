@@ -107,7 +107,7 @@ int AuthorsHashTable::GetNumeroDeColisoes()
 
 void AuthorsHashTable::PrintAutores(vector<Author*>* autores)
 {	
-	for (int i = 0; i < autores->size(); i++)
+	for (int i = autores->size()-1; i >= 0; i--)
 	{
 		auto author = autores->at(i);
 		cout << i << ": " << author->authorName << " - " << author->appearances << endl;
@@ -128,6 +128,7 @@ vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inici
 	int j = fim - 1;
 	int pivot = autores->at((inicio + fim) / 2)->appearances;
 	int aux;
+	string auxStr;
 
 	while (i <= j)
 	{
@@ -142,8 +143,15 @@ vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inici
 		if (i <= j)
 		{
 			aux = autores->at(i)->appearances;
+			auxStr = autores->at(i)->authorName;
+
 			autores->at(i)->appearances = autores->at(j)->appearances;
+			autores->at(i)->authorName = autores->at(j)->authorName;
+
 			autores->at(j)->appearances = aux;
+			autores->at(j)->authorName = auxStr;
+
+
 			i++;
 			j--;
 		}
