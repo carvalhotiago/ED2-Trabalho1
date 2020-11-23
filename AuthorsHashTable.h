@@ -17,12 +17,13 @@ public:
 	AuthorsHashTable(int size);
 	~AuthorsHashTable();
 	bool Insert(Author* author);
-	Author* Lookup(string key);
+	Author* Lookup(int id);
 
-	int HashFunction(string nome, int i);
+	int HashFunction(int id, int i);
 	int HashFunction1(int key);
 	int HashFunction2(int key);
-
+	
+	void SetAuthorsName(int id, string nome);
 	int GetNumeroDeColisoes();
 	void PrintAutores(vector<Author*>* autores);
 	vector<Author*>* GetListaDeAutoresOrdenadaPorAppearances();

@@ -7,7 +7,9 @@ class Author
 {
 public:
 	Author(string name);
+	Author(int id);
 	string authorName;
+	int id;
 	int appearances;
 };
 

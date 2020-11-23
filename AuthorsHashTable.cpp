@@ -26,9 +26,8 @@ int AuthorsHashTable::GetSomaAsciiDosCaracteres(string name)
 	return soma;
 }
 
-int AuthorsHashTable::HashFunction(string nome, int i)
+int AuthorsHashTable::HashFunction(int key, int i)
 {
-	int key = GetSomaAsciiDosCaracteres(nome);	
 	return (HashFunction1(key) + i * HashFunction2(key)) % this->m1;
 }
 
@@ -43,21 +42,15 @@ int AuthorsHashTable::HashFunction2(int key)
 }
 
 bool AuthorsHashTable::Insert(Author* author)
-{	
-	string caractereInvalido = "Ð";
-	size_t found = author->authorName.find(caractereInvalido);
-	if (found != string::npos) {
-		return false;
-	}
-
+{
 	int i = 0;	//numero de tentativas de inserção
-	int hash = HashFunction(author->authorName, i);
+	int hash = HashFunction(author->id, i);
 
 	//elemento encontrado na posicao cauculada
 	auto autorAux = this->hashTable->at(hash);
 	
 	//Se autorAux tem o mesmo nome, esse autor ja foi inserido, entao apenas incrementamos sua ocorrencia e retornamos
-	if (autorAux->authorName == author->authorName) {
+	if (autorAux->id == author->id) {
 		this->hashTable->at(hash)->appearances += 1;
 		return true;
 	}
@@ -67,7 +60,7 @@ bool AuthorsHashTable::Insert(Author* author)
 	{
 		this->numeroDeColisoes++;
 		i++;
-		hash = HashFunction(author->authorName, i);
+		hash = HashFunction(author->id, i);
 		autorAux = hashTable->at(hash);
 	}
 
@@ -76,31 +69,50 @@ bool AuthorsHashTable::Insert(Author* author)
 
 }
 
-Author* AuthorsHashTable::Lookup(string name)
+Author* AuthorsHashTable::Lookup(int id)
 {
 	int i = 0;	//numero de tentativas
-	int hash = HashFunction(name, i);
+	int hash = HashFunction(id, i);
 
 	//elemento encontrado na posicao calculada
 	auto autorAux = this->hashTable->at(hash);
 
 	//Se autorAux tem o mesmo nome, esse autor ja foi inserido, entao apenas incrementamos sua ocorrencia e retornamos
-	if (autorAux->authorName == name) {
+	if (autorAux->id == id) {
 		return autorAux;
 	}
 
 	//Enquanto nao encontrar posicao vazia, ocorrem colisoes
-	while (autorAux->authorName != name && i < this->tableSize - 1)
+	while (autorAux->id != id && i < this->tableSize - 1)
 	{
 		i++;
-		hash = HashFunction(name, i);
+		hash = HashFunction(id, i);
 		autorAux = hashTable->at(hash);
 	}
 
-	if (autorAux->authorName == name)
+	if (autorAux->id == id)
 		return autorAux;
 	return nullptr;
 
+}
+
+void AuthorsHashTable::SetAuthorsName(int id, string nome)
+{
+	int i = 0;	//numero de tentativas
+	int hash = HashFunction(id, i);
+	
+	auto autorAux = this->hashTable->at(hash);
+		
+	while (autorAux->id != id && i < this->tableSize - 1)
+	{
+		if (autorAux->authorName == "vazio") return;
+		i++;
+		hash = HashFunction(id, i);
+		autorAux = hashTable->at(hash);
+	}
+
+	if (autorAux->id == id)
+		hashTable->at(hash)->authorName = nome;
 }
 
 int AuthorsHashTable::GetNumeroDeColisoes()
@@ -113,7 +125,9 @@ void AuthorsHashTable::PrintAutores(vector<Author*>* autores)
 	for (int i = autores->size()-1; i >= 0; i--)
 	{
 		auto author = autores->at(i);
-		if(author->authorName != "vazio")
+		if (author->authorName.empty() || author->authorName == "vazio" || author->authorName == " ")
+			i--;
+		else
 			cout << i << ": " << author->authorName << " - " << author->appearances << endl;
 	}
 }

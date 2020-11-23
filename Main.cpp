@@ -60,7 +60,7 @@ vector<int>* split(const string& s, char delimiter) {
 	return tokens;
 }
 
-Author* GetAuthorById(int id)
+void UpdateAuthorsTable(AuthorsHashTable* hashTable)
 {
 	string linha;
 	string idAutor;
@@ -81,33 +81,18 @@ Author* GetAuthorById(int id)
 
 			idAutor = idAutor.substr(1, idAutor.size() - 2);
 			nomeAutor = nomeAutor.substr(1, nomeAutor.size() - 2);
+			if (nomeAutor.empty() || nomeAutor == " ")
+				nomeAutor = "Desconhecido";
 
 			long convertedId = atol(idAutor.c_str());
 
-			if (id == convertedId) {
-				Author* author = new Author(nomeAutor);
-				return author;
-			}
+			hashTable->SetAuthorsName(convertedId, nomeAutor);
 		}
-		return new Author("Desconhecido");
 	}
 	else
 	{
 		cout << "Erro ao abrir o arquivo!" << endl;
 	}
-}
-
-vector<Author*> GetAuthorsFromBook(Book* book)
-{
-	vector<Author*> autores;
-
-	for (int i = 0; i < book->authors->size(); i++)
-	{
-		Author* autor = GetAuthorById(book->authors->at(i));
-		autores.push_back(autor);
-	}
-
-	return autores;
 }
 
 int main()
@@ -143,7 +128,7 @@ int main()
 	regex regex("\s*(\"[^\"]*\")");
 
 	BooksHashTable* booksHashTable = new BooksHashTable(N * 1.3);
-	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(N * 1.3);
+	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(N * 4);
 
 	if (arquivo.is_open())
 	{
@@ -231,22 +216,20 @@ int main()
 			arquivo.seekg(0, arquivo.beg);
 
 			if (booksHashTable->Insert(book)) {
-				vector<Author*> autores = GetAuthorsFromBook(book);
-				for (Author* autor : autores)
+				for (int i = 0; i < book->authors->size(); i++)
 				{
-					authorsHashTable->Insert(autor);
+					authorsHashTable->Insert(new Author(book->authors->at(i)));
 				}
 			}
 			else
 				i--; //essa iteracao nao foi valida pois o livro lido eh repetido, entao le outro
 
-			delete book;
 			delete registro;
 		}
 
-		//booksHashTable->PrintHashTable();
-		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n\n";
+		UpdateAuthorsTable(authorsHashTable);
 
+		cout << endl;
 		authorsHashTable->PrintAutores(authorsHashTable->GetListaDeAutoresOrdenadaPorAppearances());
 
 		arquivo.seekg(0, arquivo.beg);
