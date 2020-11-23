@@ -76,7 +76,7 @@ Author* GetAuthorById(int id)
 		getline(autores, linha);
 
 		while (getline(autores, linha))
-		{		
+		{
 			stringstream ss(linha);
 			getline(ss, idAutor, ',');
 			getline(ss, nomeAutor, ',');
@@ -96,7 +96,7 @@ Author* GetAuthorById(int id)
 		}
 		return new Author("Desconhecido");
 	}
-	else 
+	else
 	{
 		cout << "Erro ao abrir o arquivo!" << endl;
 	}
@@ -134,18 +134,10 @@ int main()
 	ifstream entrada;
 	entrada.open("Data/entrada.txt");
 
-	//Primeiro parâmetro do arquivo de entrada
-	int numeroDeEntradas;
-	entrada >> numeroDeEntradas;
+	//Numero de livros que serao lidos
+	int N;
+	entrada >> N;
 
-	//Lê e armazena os valores de N (tamanho das amostras) do arquivo de entrada
-	vector<int> valoresDeN;
-	string str;
-	string linhaIgnorada;
-	getline(entrada, linhaIgnorada);
-	while (getline(entrada, str)) {
-		valoresDeN.push_back(stoi(str));
-	}
 	entrada.close();
 
 	//Lê dataset
@@ -155,17 +147,8 @@ int main()
 	//Expressão regular para captura dos grupos de informações das linhas
 	regex regex("\s*(\"[^\"]*\")");
 
-
-
-
-
-
-
-
-
-	BooksHashTable* booksHashTable = new BooksHashTable(valoresDeN.at(0));
-	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(valoresDeN.at(0)*1.3);
-
+	BooksHashTable* booksHashTable = new BooksHashTable(N * 1.3);
+	AuthorsHashTable* authorsHashTable = new AuthorsHashTable(N * 1.3);
 
 	if (arquivo.is_open())
 	{
@@ -174,179 +157,91 @@ int main()
 		unsigned int tamanhoDoArquivo = arquivo.tellg();
 		arquivo.seekg(0, arquivo.beg);
 
-		// Para cada um dos valores de N passados
-		for (int k = 0; k < valoresDeN.size(); k++)
+		for (int i = 0; i < N; i++)
 		{
-			//Estrutura que irá armazenar os 5 vetores de livros preenchidos aleatoriamente
-			vector<vector<Book*>*> listaDeVetores;
+			if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
 
-			// Gera 5 amostras de entradas aleatórias do dataset
-			for (unsigned j = 0; j < 1; j++)
+			// Pega a linha correspondente a um byte aleatorio
+			int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
+			//cout << byteAleatorio << " ";
+			arquivo.seekg(byteAleatorio);
+			//cout << "byteAleatorio " << byteAleatorio << endl;
+
+			//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
+			string dump;
+			string str;
+			getline(arquivo, dump);
+			getline(arquivo, str);
+
+			//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
+			//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
+			while (str.empty() || str.back() != '"' || str.at(0) != '"')
 			{
-				//Estrutura que irá armazenar cada vetor de livros gerado
-				vector<Book*>* vet = new vector<Book*>();
+				getline(arquivo, str);
+			}
 
-				//Cada uma das 5 amostras geradas terá o mesmo tamanho, que é um dos Ns passados
-				for (int i = 0; i < valoresDeN.at(k); i++)
+			Book* book = new Book();
+			stringstream ss(str);
+
+			//Itera sobre a linha recuperada, capturando os grupos de informação através de RegEx
+			sregex_iterator iterator(str.begin(), str.end(), regex);
+			vector<string>* registro = new vector<string>;
+			sregex_iterator end;
+			while (iterator != end)
+			{
+				for (unsigned i = 0; i < iterator->size() - 1; i++)
 				{
-					if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
+					string input;
+					getline((stringstream)(*iterator)[i], input);
 
-					// Pega a linha correspondente a um byte aleatorio
-					int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
-					//cout << byteAleatorio << " ";
-					arquivo.seekg(byteAleatorio);
-					//cout << "byteAleatorio " << byteAleatorio << endl;
-
-					//Primeiro dá um getline para ir pro início da linha seguinte à linha aleatória em que caiu, e então dá o getline pra pegar a linha que nos interessa
-					string dump;
-					string str;
-					getline(arquivo, dump);
-					getline(arquivo, str);
-
-					//Existem casos de string que quebram a linha na propriedade título e quebram o código na hora de armazenar os valores na variável book, por isso
-					//estamos utilizando apenas strings que começam ou terminam com aspas para garantir que não leremos algum resto de quebra de linha de um título nesse estado
-					while(str.empty() || str.back() != '"' || str.at(0) != '"')
-					{ 					
-						getline(arquivo, str);				
-					}
-
-					Book* book = new Book();
-					stringstream ss(str);
-
-					//Itera sobre a linha recuperada, capturando os grupos de informação através de RegEx
-					sregex_iterator iterator(str.begin(), str.end(), regex);
-					vector<string>* registro = new vector<string>;
-					sregex_iterator end;
-					while (iterator != end)
-					{
-						for (unsigned i = 0; i < iterator->size() - 1; i++)
-						{
-							string input;
-							getline((stringstream)(*iterator)[i], input);
-
-							input = input.substr(1, input.size() - 2);
-							registro->push_back(input);
-						}
-						iterator++;
-					}
-
-					if (registro->at(0) != "")
-					{
-						string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
-						stringstream iss(text);
-						vector<int>* authorsIds = split(text, ',');
-						book->authors = authorsIds;
-					}
-				
-					if (registro->at(2) != "")
-					{
-						string text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
-						vector<int>* categories = split(text, ',');
-						book->categories = categories;
-					}			
-					
-					book->bestsellersRank = registro->at(1);					
-					book->edition = registro->at(3);
-					book->id = registro->at(4);
-					book->isbn10 = registro->at(5);
-					book->isbn13 = registro->at(6);
-					book->ratingAvg = registro->at(7);
-					book->ratingCount = registro->at(8);
-					book->title = registro->at(9);
-
-					vet->push_back(book);
-					arquivo.seekg(0, arquivo.beg);
-
-					
-					if (booksHashTable->Insert(book)) {
-						vector<Author*> autores = GetAuthorsFromBook(book);
-						for (Author* autor : autores)
-						{
-							authorsHashTable->Insert(autor);
-						}
-					}
-					else
-					{
-						//essa iteracao nao foi valida pois o livro lido eh repetido, entao le outro
-						i--;
-					}
-
+					input = input.substr(1, input.size() - 2);
+					registro->push_back(input);
 				}
-
-				//Ao terminar de gerar o vetor com N livros aleatórios, o coloca na lista que vai guardar as 5 amostras
-				listaDeVetores.push_back(vet);
+				iterator++;
 			}
 
-			/*
-#pragma region BubbleSort
-			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
-			Bubblesort bubble;
-			saida << "\tBubbleSort - N:" << valoresDeN.at(k) << endl;
-			double somaTemposBubble = 0.0;
-			int somaComparacoes = 0;
-			int somaCopiasRegistros = 0;
-			for (int i = 0; i < listaDeVetores.size(); i++)
+			if (registro->at(0) != "")
 			{
-				vector<Book*>* vectorAtual = listaDeVetores.at(i);
-
-				long tempo = bubble.BubbleSort(*vectorAtual, vectorAtual->size());
-
-				saida << "Amostra " << i << ": " << tempo << " milliseconds, " << bubble.numeroDeComparacoes << " comparacoes, " << bubble.numeroDeCopiasRegistro << " copias de registros." << endl;
-				somaTemposBubble += tempo;
-				somaComparacoes += bubble.numeroDeComparacoes;
-				somaCopiasRegistros += bubble.numeroDeCopiasRegistro;
+				string text = registro->at(0) = registro->at(0).substr(1, registro->at(0).size() - 2);
+				stringstream iss(text);
+				vector<int>* authorsIds = split(text, ',');
+				book->authors = authorsIds;
 			}
-			auto tempoMedioBubble = somaTemposBubble / listaDeVetores.size();
-			saida << "Tempo medio: " << tempoMedioBubble << " milliseconds." << endl;
 
-			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
-			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
-
-			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
-			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
-#pragma endregion
-*/
-
-
-
-#pragma region QuickSort
-			//Chama o algoritmo de ordenação QuickSort para cada um dos vetores da lista de amostras
-			Quicksort quick;
-			saida << "\tQuickSort - N:" << valoresDeN.at(k) << endl;
-			double somaTemposQuick = 0.0;
-			int somaComparacoes = 0;
-			int somaCopiasRegistros = 0;
-			for (int i = 0; i < listaDeVetores.size(); i++)
+			if (registro->at(2) != "")
 			{
-				vector<Book*>* vectorAtual = listaDeVetores.at(i);
-
-				long tempo = quick.Execute(*vectorAtual, 0, vectorAtual->size());
-
-				saida << "Amostra " << i << ": " << tempo << " milliseconds, " << quick.numComparacoes << " comparacoes, " << quick.numCopiasRegistros << " copias de registros." << endl;
-				somaTemposQuick += tempo;
-				somaComparacoes += quick.numComparacoes;
-				somaCopiasRegistros += quick.numCopiasRegistros;
+				string text = registro->at(2) = registro->at(2).substr(1, registro->at(2).size() - 2);
+				vector<int>* categories = split(text, ',');
+				book->categories = categories;
 			}
 
-			auto tempoMedioQuicksort = somaTemposQuick / listaDeVetores.size();
-			saida << "Tempo medio: " << tempoMedioQuicksort << " milliseconds." << endl;
+			book->bestsellersRank = registro->at(1);
+			book->edition = registro->at(3);
+			book->id = registro->at(4);
+			book->isbn10 = registro->at(5);
+			book->isbn13 = registro->at(6);
+			book->ratingAvg = registro->at(7);
+			book->ratingCount = registro->at(8);
+			book->title = registro->at(9);
 
-			auto numComparacoesMedio = somaComparacoes / listaDeVetores.size();
-			saida << "Num de comparacoes medio: " << numComparacoesMedio << " comparacoes." << endl;
+			arquivo.seekg(0, arquivo.beg);
 
-			auto numCopiasDeRegistroMedio = somaCopiasRegistros / listaDeVetores.size();
-			saida << "Num de copias registro medio: " << numCopiasDeRegistroMedio << " copias.\n\n" << endl;
-#pragma endregion
-
+			if (booksHashTable->Insert(book)) {
+				vector<Author*> autores = GetAuthorsFromBook(book);
+				for (Author* autor : autores)
+				{
+					authorsHashTable->Insert(autor);
+				}
+			}
+			else
+				i--; //essa iteracao nao foi valida pois o livro lido eh repetido, entao le outro
 		}
-
 
 		//booksHashTable->PrintHashTable();
 		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n\n";
 
 		authorsHashTable->PrintAutores(authorsHashTable->GetListaDeAutoresOrdenadaPorAppearances());
 
-		
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}
