@@ -66,8 +66,6 @@ Author* GetAuthorById(int id)
 	string idAutor;
 	string nomeAutor;
 
-	vector<Author>* listaTeste = new vector<Author>;
-
 	ifstream autores;
 	autores.open("Data/authors-grande.csv");
 
@@ -86,13 +84,10 @@ Author* GetAuthorById(int id)
 
 			long convertedId = atol(idAutor.c_str());
 
-			Author* author = new Author(nomeAutor);
-			author->authorName = nomeAutor;
-
-			listaTeste->push_back(*author);
-
-			if (id == convertedId)
+			if (id == convertedId) {
+				Author* author = new Author(nomeAutor);
 				return author;
+			}
 		}
 		return new Author("Desconhecido");
 	}
@@ -159,7 +154,16 @@ int main()
 
 		for (int i = 0; i < N; i++)
 		{
-			if (i % 1000 == 0) cout << "Gerando amostra " << i << endl;
+			auto now = Clock::now();
+			long diff = chrono::duration_cast<std::chrono::seconds>(now - t1).count();
+
+			if (i % 10 == 0 && i>0) {
+				cout << "Lendo registro " << i << ". Tempo de execucao: " << diff << " segundos." << endl;
+
+				float tempoMedioPorLivro = (float)diff/i;
+				float estimativaTempoRestante = tempoMedioPorLivro * N - diff;
+				cout << "Tempo medio por livro: " << tempoMedioPorLivro << " segundos.\nTempo restante (est.): " << estimativaTempoRestante/60 << " minutos.\n\n";
+			}
 
 			// Pega a linha correspondente a um byte aleatorio
 			int byteAleatorio = (rand() * rand()) % (tamanhoDoArquivo - 10000000);
@@ -235,6 +239,9 @@ int main()
 			}
 			else
 				i--; //essa iteracao nao foi valida pois o livro lido eh repetido, entao le outro
+
+			delete book;
+			delete registro;
 		}
 
 		//booksHashTable->PrintHashTable();
@@ -253,9 +260,10 @@ int main()
 
 
 	auto t2 = Clock::now();
-	long tempo = chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+	long tempo = chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
 
-	saida << tempo;
+	saida << "Execucao com N = " << N << endl;
+	saida << "Tempo total: " << tempo << "(s)\n";
 
 	saida.close();
 	cout << "Programa encerrado com sucesso!" << endl;

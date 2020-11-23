@@ -43,15 +43,18 @@ int AuthorsHashTable::HashFunction2(int key)
 }
 
 bool AuthorsHashTable::Insert(Author* author)
-{
+{	
+	string caractereInvalido = "Ð";
+	size_t found = author->authorName.find(caractereInvalido);
+	if (found != string::npos) {
+		return false;
+	}
+
 	int i = 0;	//numero de tentativas de inserção
 	int hash = HashFunction(author->authorName, i);
 
 	//elemento encontrado na posicao cauculada
 	auto autorAux = this->hashTable->at(hash);
-
-	if (author->authorName == "Desconhecido")
-		cout << "desc\n";
 	
 	//Se autorAux tem o mesmo nome, esse autor ja foi inserido, entao apenas incrementamos sua ocorrencia e retornamos
 	if (autorAux->authorName == author->authorName) {
@@ -110,10 +113,10 @@ void AuthorsHashTable::PrintAutores(vector<Author*>* autores)
 	for (int i = autores->size()-1; i >= 0; i--)
 	{
 		auto author = autores->at(i);
-		cout << i << ": " << author->authorName << " - " << author->appearances << endl;
+		if(author->authorName != "vazio")
+			cout << i << ": " << author->authorName << " - " << author->appearances << endl;
 	}
 }
-
 
 
 vector<Author*>* AuthorsHashTable::GetListaDeAutoresOrdenadaPorAppearances()
