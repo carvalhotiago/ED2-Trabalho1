@@ -24,8 +24,7 @@ public:
 	int HashFunction2(int key);
 
 	int GetNumeroDeColisoes();
-	void PrintHashTable();
-	vector<Author*>* GetListaDeAutores();
+	void PrintAutores(vector<Author*>* autores);
 	vector<Author*>* GetListaDeAutoresOrdenadaPorAppearances();
 	vector<Author*>* QuickSort(vector<Author*>* autores, int inicio, int fim);
 	int GetSomaAsciiDosCaracteres(string name);

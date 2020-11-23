@@ -11,6 +11,8 @@
 #include "Quicksort.h"
 #include "BooksHashTable.h"
 #include "AuthorsHashTable.h"
+#include <chrono>
+typedef std::chrono::high_resolution_clock Clock;
 
 using namespace std;
 
@@ -115,6 +117,8 @@ vector<Author*> GetAuthorsFromBook(Book* book)
 
 int main()
 {
+	auto t1 = Clock::now();
+
 	//Setta a semente para o valor do tempo atual
 	srand(time(0));
 
@@ -340,7 +344,9 @@ int main()
 		//booksHashTable->PrintHashTable();
 		cout << "\n->GetNumeroDeColisoes(): " << booksHashTable->GetNumeroDeColisoes() << "\n\n";
 
-		authorsHashTable->PrintHashTable();
+		authorsHashTable->PrintAutores(authorsHashTable->GetListaDeAutoresOrdenadaPorAppearances());
+
+		
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
 	}
@@ -349,6 +355,12 @@ int main()
 		cerr << "Erro ao abrir arquivo!" << endl;
 		exit(1);
 	}
+
+
+	auto t2 = Clock::now();
+	long tempo = chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
+
+	saida << tempo;
 
 	saida.close();
 	cout << "Programa encerrado com sucesso!" << endl;

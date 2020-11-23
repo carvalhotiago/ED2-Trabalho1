@@ -49,10 +49,13 @@ bool AuthorsHashTable::Insert(Author* author)
 
 	//elemento encontrado na posicao cauculada
 	auto autorAux = this->hashTable->at(hash);
+
+	if (author->authorName == "Desconhecido")
+		cout << "desc\n";
 	
 	//Se autorAux tem o mesmo nome, esse autor ja foi inserido, entao apenas incrementamos sua ocorrencia e retornamos
 	if (autorAux->authorName == author->authorName) {
-		autorAux->appearances++;
+		this->hashTable->at(hash)->appearances += 1;
 		return true;
 	}
 
@@ -102,35 +105,20 @@ int AuthorsHashTable::GetNumeroDeColisoes()
 	return this->numeroDeColisoes;
 }
 
-void AuthorsHashTable::PrintHashTable()
-{
-	for (int i = 0; i < this->tableSize; i++)
+void AuthorsHashTable::PrintAutores(vector<Author*>* autores)
+{	
+	for (int i = 0; i < autores->size(); i++)
 	{
-		auto author = this->hashTable->at(i);
+		auto author = autores->at(i);
 		cout << i << ": " << author->authorName << " - " << author->appearances << endl;
 	}
 }
 
-/*
-vector<Author*>* AuthorsHashTable::GetListaDeAutores()
-{
-	vector<Author*>* autores = new vector<Author*>();
-	for (int i = 0; i < this->tableSize; i++)
-	{
-		vector<Author*>* row = hashTable.at(i);
-		for (int j = 0; j < row->size(); j++)
-		{
-			autores->push_back(row->at(j));
-		}
-	}
 
-	return autores;
-}
 
 vector<Author*>* AuthorsHashTable::GetListaDeAutoresOrdenadaPorAppearances()
 {
-	auto autores = GetListaDeAutores();
-	auto autoresOrdenados = QuickSort(autores, 0, autores->size());
+	auto autoresOrdenados = QuickSort(this->hashTable, 0, tableSize);
 	return autoresOrdenados;
 }
 
@@ -170,15 +158,6 @@ vector<Author*>* AuthorsHashTable::QuickSort(vector<Author*>* autores, int inici
 	return autores;
 }
 
-void AuthorsHashTable::PrintListaDeAutores()
-{
-	vector<Author*>* autores = this->GetListaDeAutoresOrdenadaPorAppearances();
-	cout << "Lista de autores ordenados por appearances (desc)\n";
-	for (int i = autores->size()-1 ; i >= 0; i--)
-	{
-		auto autor = autores->at(i);
-		cout << autor->authorName << ": " << autor->appearances << endl;
-	}
-}*/
+
 
 
