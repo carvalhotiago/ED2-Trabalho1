@@ -1,12 +1,15 @@
 #pragma once
+#include <string>
+
+using namespace std;
+
 class NoArvVermPreto
 {
 public:
-	NoArvVermPreto();
-	int cor;
 	int info;
-	NoArvVermPreto* esq;
-	NoArvVermPreto* dir;
-	NoArvVermPreto* pai;
+	string cor;
+	NoArvVermPreto* esq = nullptr;
+	NoArvVermPreto* dir = nullptr;
+	NoArvVermPreto* pai = nullptr;
 };
 
