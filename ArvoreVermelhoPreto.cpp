@@ -4,14 +4,25 @@
 #include <string.h>
 #include <math.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <iostream>
 #include "ArvoreVermelhoPreto.h"
 
 using namespace std;
 
-void ArvoreVermelhoPreto::InsertNode(int stuff) {
-	if (root == nullptr) {
+void ArvoreVermelhoPreto::InsertNode(string id) {
+	
+	stringstream idBookInt(id);
+	unsigned long long idBook = 0;
+	idBookInt >> idBook;
+
+	if (root == nullptr)
+	{
 		root = new NoArvVermPreto();
-		root->info = stuff;
+		root->info = idBook;
 		root->pai = nullptr;
 		root->cor = "BLACK";
 		cout << "Element inserted.\n";
@@ -19,10 +30,10 @@ void ArvoreVermelhoPreto::InsertNode(int stuff) {
 	else {
 		auto linker = GetRoot();
 		NoArvVermPreto* newnode = new NoArvVermPreto();
-		newnode->info = stuff;
+		newnode->info = idBook;
 
 		while (linker != nullptr) {
-			if (linker->info > stuff) {
+			if (linker->info > idBook) {
 				if (linker->esq == nullptr) {
 					linker->esq = newnode;
 					newnode->cor = "RED";
@@ -231,7 +242,7 @@ void ArvoreVermelhoPreto::RB_Delete_Fixup(NoArvVermPreto* z) {
 	z->cor = "BLACK";
 }
 
-NoArvVermPreto* ArvoreVermelhoPreto::TreeSearch(int stuff) {
+NoArvVermPreto* ArvoreVermelhoPreto::TreeSearch(unsigned long long stuff) {
 	auto* temp = GetRoot();
 	if (temp == nullptr) { return nullptr; }
 

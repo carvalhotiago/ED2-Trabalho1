@@ -6,7 +6,7 @@ using namespace std;
 class NoArvVermPreto
 {
 public:
-	int info;
+	unsigned long long info;
 	string cor;
 	NoArvVermPreto* esq = nullptr;
 	NoArvVermPreto* dir = nullptr;
