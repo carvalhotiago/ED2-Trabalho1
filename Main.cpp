@@ -104,7 +104,7 @@ int main()
 
 	//Abre arquivo de saida, que irá armazenar estatísticas do desempenho de toda a execução
 	ofstream saida;
-	saida.open("saida.txt");
+	saida.open("saida-500k.txt");
 	if (saida.is_open())
 		cout << "Arquivo saida aberto com sucesso." << endl;
 	else
@@ -142,7 +142,7 @@ int main()
 			auto now = Clock::now();
 			long diff = chrono::duration_cast<std::chrono::seconds>(now - t1).count();
 
-			if (i % 10 == 0 && i>0) {
+			if (i % 500 == 0 && i>0) {
 				cout << "Lendo registro " << i << ". Tempo de execucao: " << diff << " segundos." << endl;
 
 				float tempoMedioPorLivro = (float)diff/i;
@@ -229,8 +229,31 @@ int main()
 
 		UpdateAuthorsTable(authorsHashTable);
 
+		auto t2 = Clock::now();
+		long tempo = chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
+
+		saida << "Execucao com N = " << N << endl;
+		saida << "Tempo total: " << tempo << "(s)\n";
+
 		cout << endl;
-		authorsHashTable->PrintAutores(authorsHashTable->GetListaDeAutoresOrdenadaPorAppearances());
+
+		auto inicioQuickSort = Clock::now();
+		auto autoresOrdenados = authorsHashTable->GetListaDeAutoresOrdenadaPorAppearances();
+		auto fimQuickSort = Clock::now();
+		long tempoQuickSort = chrono::duration_cast<std::chrono::milliseconds>(fimQuickSort - inicioQuickSort).count();
+		saida << "Tempo para ordenacao dos autores com QuickSort: " << tempoQuickSort << "(ms)\n\n";
+
+
+		for (int i = autoresOrdenados->size() - 1; i >= 0; i--)
+		{
+			auto author = autoresOrdenados->at(i);
+			if (author->authorName.empty() || author->authorName == "vazio" || author->authorName == " ")
+				i--;
+			else if (author->appearances > 3) {
+				cout << autoresOrdenados->size() - i << ": " << author->authorName << " - " << author->appearances << endl;
+				saida << autoresOrdenados->size()-i << ": " << author->authorName << " - " << author->appearances << endl;
+			}
+		}
 
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
@@ -242,11 +265,6 @@ int main()
 	}
 
 
-	auto t2 = Clock::now();
-	long tempo = chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
-
-	saida << "Execucao com N = " << N << endl;
-	saida << "Tempo total: " << tempo << "(s)\n";
 
 	saida.close();
 	cout << "Programa encerrado com sucesso!" << endl;

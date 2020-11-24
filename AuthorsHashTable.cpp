@@ -127,7 +127,7 @@ void AuthorsHashTable::PrintAutores(vector<Author*>* autores)
 		auto author = autores->at(i);
 		if (author->authorName.empty() || author->authorName == "vazio" || author->authorName == " ")
 			i--;
-		else
+		else if(author->appearances > 3)
 			cout << i << ": " << author->authorName << " - " << author->appearances << endl;
 	}
 }
