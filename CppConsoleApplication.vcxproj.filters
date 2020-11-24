@@ -45,9 +45,6 @@
     <ClCompile Include="ArvoreVermelhoPreto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NoArvVermPreto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ArvoreB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

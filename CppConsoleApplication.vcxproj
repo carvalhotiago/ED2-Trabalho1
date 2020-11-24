@@ -148,7 +148,6 @@
     <ClCompile Include="Lista.cpp" />
     <ClCompile Include="No.cpp" />
     <ClCompile Include="NoArvB.cpp" />
-    <ClCompile Include="NoArvVermPreto.cpp" />
     <ClCompile Include="Quicksort.cpp" />
     <ClCompile Include="ReadAndWrite_Cpp.cpp" />
     <ClCompile Include="Bubblesort.cpp" />
