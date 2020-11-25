@@ -4,6 +4,7 @@
 #include <math.h>
 #include "ArvoreB.h"
 
+//Construtor da arvore B
 ArvoreB::ArvoreB(int ordem)
 {
 	NoArvB* raiz = NULL;
@@ -17,6 +18,7 @@ ArvoreB::ArvoreB(int ordem)
 	this->ordem = ordem;
 }
 
+//Função para o ajuste da arvore durante a inserção
 void ArvoreB::AjustarArvore(NoArvB* pai, unsigned long long  i, int ordem) 
 {
 	int j;	
@@ -44,7 +46,7 @@ void ArvoreB::AjustarArvore(NoArvB* pai, unsigned long long  i, int ordem)
 	pai->nodesNumber++;
 }
 
-
+//Função auxiliar para balanceamento da árvore
 void ArvoreB::InserirAux(NoArvB* no, unsigned long long  chave, int ordem) 
 {	
 	int i = no->nodesNumber - 1;
@@ -80,7 +82,7 @@ void ArvoreB::InserirAux(NoArvB* no, unsigned long long  chave, int ordem)
 	}
 }
 
-
+//Função para inserir uma chave na arvore
 void ArvoreB::Inserir(unsigned long long  chave) {
 
 	NoArvB* r = this->raiz;

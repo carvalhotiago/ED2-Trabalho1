@@ -149,16 +149,15 @@ int main()
 
 			arquivo.seekg(0, arquivo.beg);
 
-			//Seção referente à árvores	
-			string idLivro = book->id;
+			//Arvore Vermelhoe-Preto
+			string idLivro = book->id;	
+			arv->Inserir(idLivro);
+			nosArvoreVermPreto->push_back(idLivro);		
 
 			stringstream idBookInt(idLivro);
 			unsigned long long idBook = 0;
 			idBookInt >> idBook;
-
-			//arvoreB->Insert(idBook);
-			arv->Inserir(idLivro);
-			nosArvoreVermPreto->push_back(idLivro);		
+			//arvoreB->Inserir(idBook);
 
 			delete book;
 			delete registro;
