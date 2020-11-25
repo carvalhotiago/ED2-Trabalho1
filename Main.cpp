@@ -50,6 +50,14 @@ int main()
 	else
 		cout << "Erro no arquivo saida busca." << endl;
 
+	////Abre arquivo de saida, que irá armazenar estatísticas do desempenho de toda a execução
+	//ofstream saidaArvoreB;
+	//saidaArvoreB.open("saidaInsercaoArvB.txt");
+	//if (saidaArvoreB.is_open())
+	//	cout << "Arquivo saida arvore B aberto com sucesso." << endl;
+	//else
+	//	cout << "Erro no arquivo saida busca." << endl;
+
 	//Abre o arquivo de entrada com informações dos números N
 	ifstream entrada;
 	entrada.open("Data/entrada.txt");
@@ -157,6 +165,7 @@ int main()
 			stringstream idBookInt(idLivro);
 			unsigned long long idBook = 0;
 			idBookInt >> idBook;
+
 			//arvoreB->Inserir(idBook);
 
 			delete book;
@@ -173,6 +182,10 @@ int main()
 		saidaInsercao << "Estatisticas da insercao em arvore vermelho-preto: " << endl;
 		saidaInsercao << "Total de rotacoes = " << arv->numRotacoes << endl;
 		saidaInsercao << "Total de trocas de cor = " << arv->numTrocasDeCor <<endl;
+
+		//saidaArvoreB << "Estatisticas da insercao em arvore B: " << endl;
+		//saidaArvoreB << "Total de comparacoes = " << arvoreB->comparacoes << endl;
+		//saidaArvoreB << "Total de trocas = " << arvoreB->trocas << endl;
 
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();
@@ -191,6 +204,9 @@ int main()
 
 	saidaBusca << "Execucao com N = " << N << endl;
 	saidaBusca << "Tempo total: " << tempo << "(s)\n";
+
+	//saidaArvoreB << "Execucao com N = " << N << endl;
+	//saidaArvoreB << "Tempo total: " << tempo << "(s)\n";
 
 	saidaInsercao.close();
 	cout << "Programa encerrado com sucesso!" << endl;

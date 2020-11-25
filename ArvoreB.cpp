@@ -15,49 +15,58 @@ ArvoreB::ArvoreB(int ordem)
 	this->raiz->nodesNumber = 0;
 	this->raiz->nosFilhos = new vector<NoArvB*>;
 
+	this->trocas = 0;
+	this->comparacoes = 0;
+
 	this->ordem = ordem;
 }
 
 //Função para o ajuste da arvore durante a inserção
-void ArvoreB::AjustarArvore(NoArvB* pai, unsigned long long  i, int ordem) 
+void ArvoreB::AjustarArvore(NoArvB* pai, unsigned long long indiceAux, int ordem) 
 {
-	int j;	
-	NoArvB* z = new NoArvB;	
-	NoArvB* y = pai->nosFilhos->at(i);
-	z->isFolha = y->isFolha;
-	z->nodesNumber = ceil((double)ordem / 2) - 1;
+	int aux;	
+	NoArvB* noAux1 = new NoArvB;	
+	NoArvB* noAux2 = pai->nosFilhos->at(indiceAux);
+	noAux1->isFolha = noAux2->isFolha;
+	noAux1->nodesNumber = ceil((double)ordem / 2) - 1;
+
+	trocas++;
+	for (aux = 0; aux < (int)ceil((double)ordem / 2) - 1; aux++) 
+		noAux1->keys->push_back(noAux2->keys->at(static_cast<unsigned __int64>(aux) + (ordem / 2)));
 	
-	for (j = 0; j < (int)ceil((double)ordem / 2) - 1; j++) 
-		z->keys->push_back(y->keys->at(static_cast<unsigned __int64>(j) + (ordem / 2)));
 	
-	
-	if (!y->isFolha) 
-		for (j = 0; j < (int)((ordem + 1) / 2); j++) 
-			z->nosFilhos->push_back(y->nosFilhos->at(static_cast<unsigned __int64>(j) + (ordem / 2)));
-	
-	y->nodesNumber = ceil(ordem / 2) - 1;
+	if (!noAux2->isFolha)
+		for (aux = 0; aux < (int)((ordem + 1) / 2); aux++) 
+			noAux1->nosFilhos->push_back(noAux2->nosFilhos->at(static_cast<unsigned __int64>(aux) + (ordem / 2)));
+
+	trocas++;	
+	noAux2->nodesNumber = ceil(ordem / 2) - 1;
 		
-	for (j = pai->nodesNumber; j >= i + 1; j--)
-		pai->nosFilhos->push_back(pai->nosFilhos->at(j));	
+	trocas++;
+	for (aux = pai->nodesNumber; aux >= indiceAux + 1; aux--)
+		pai->nosFilhos->push_back(pai->nosFilhos->at(aux));	
 	
-	pai->nosFilhos->push_back(z);
+	trocas++;
+	pai->nosFilhos->push_back(noAux1);
 	
-	pai->keys->push_back(y->keys->at(static_cast<unsigned __int64>((ordem / 2)) - 1));
+	trocas++;
+	pai->keys->push_back(noAux2->keys->at(static_cast<unsigned __int64>((ordem / 2)) - 1));
 	pai->nodesNumber++;
 }
 
 //Função auxiliar para balanceamento da árvore
 void ArvoreB::InserirAux(NoArvB* no, unsigned long long  chave, int ordem) 
 {	
-	int i = no->nodesNumber - 1;
+	int contadorAux = no->nodesNumber - 1;
 	
 	if (no->isFolha) 
 	{
 				
-		while (i >= 0 && (no->keys->at(i) > chave) > 0)
+		while (contadorAux >= 0 && (no->keys->at(contadorAux) > chave) > 0)
 		{
-			no->keys->push_back(no->keys->at(i));
-			i--;
+			comparacoes++;
+			no->keys->push_back(no->keys->at(contadorAux));
+			contadorAux--;
 		}
 		
 		no->keys->push_back(chave);
@@ -65,27 +74,32 @@ void ArvoreB::InserirAux(NoArvB* no, unsigned long long  chave, int ordem)
 	}	
 	else 
 	{		
-		while (i >= 0 && (no->keys->at(i) > chave) > 0)
-			i--;
+		while (contadorAux >= 0 && (no->keys->at(contadorAux) > chave) > 0)
+		{
+			comparacoes++;
+			contadorAux--;
+		}
 
-		i++;
-				
-		if (no->nosFilhos->at(i)->nodesNumber == ordem - 1)
+		contadorAux++;
+
+		comparacoes++;
+		if (no->nosFilhos->at(contadorAux)->nodesNumber == ordem - 1)
 		{	
-			AjustarArvore(no, i, ordem);
-			
-			if ((no->keys->at(i) < chave) < 0)
-				i = i + 1;
+			AjustarArvore(no, contadorAux, ordem);
+
+			comparacoes++;
+			if ((no->keys->at(contadorAux) < chave) < 0)
+				contadorAux += 1;
 		}
 				
-		InserirAux(no->nosFilhos->at(i), chave, ordem);
+		InserirAux(no->nosFilhos->at(contadorAux), chave, ordem);
 	}
 }
 
 //Função para inserir uma chave na arvore
 void ArvoreB::Inserir(unsigned long long  chave) {
 
-	NoArvB* r = this->raiz;
+	NoArvB* noAux = this->raiz;
 	
 	if (this->raiz->nodesNumber == 0) {
 		this->raiz->keys->push_back(chave);
@@ -93,18 +107,19 @@ void ArvoreB::Inserir(unsigned long long  chave) {
 	}
 	else 
 	{		
-		if (r->nodesNumber == this->ordem - 1) 
+		comparacoes++;
+		if (noAux->nodesNumber == this->ordem - 1)
 		{
-			NoArvB* s = new NoArvB();
-			this->raiz = s;
-			s->isFolha = 0;
-			s->nodesNumber = 0;
-			s->nosFilhos->push_back(r);
+			NoArvB* noNovo = new NoArvB();
+			this->raiz = noNovo;
+			noNovo->isFolha = 0;
+			noNovo->nodesNumber = 0;
+			noNovo->nosFilhos->push_back(noAux);
 
-			AjustarArvore(s, 0, this->ordem);
-			InserirAux(s, chave, this->ordem);
+			AjustarArvore(noNovo, 0, this->ordem);
+			InserirAux(noNovo, chave, this->ordem);
 		}
 		else 
-			InserirAux(r, chave, this->ordem);
+			InserirAux(noAux, chave, this->ordem);
 	}
 }
