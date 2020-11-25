@@ -3,12 +3,12 @@
 class ArvoreB
 {
 public:
-	NoArvB* raiz;
 	int ordem;
-	ArvoreB* CriaArvore(int ordem);
-	NoArvB* AlocaNo(int ordem);
-	void ReparteArvoreNoFilho(NoArvB* pai, int i, int ordem);
-	void InsertKey(NoArvB* no, int chave, int ordem);
-	void Insert(ArvoreB* arv, int chave);
+	NoArvB* raiz;
+	ArvoreB(int ordem);
+	void Insert(ArvoreB* arv, unsigned long long chave);
+	void InsertKey(NoArvB* no, unsigned long long chave, int ordem);
+	void Insert(unsigned long long chave);
+	void ReparteArvoreNoFilho(NoArvB* pai, unsigned long long i, int ordem);
 };
 

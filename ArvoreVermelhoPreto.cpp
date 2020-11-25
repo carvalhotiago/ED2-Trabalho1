@@ -7,14 +7,21 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
-#include <string>
-#include <iostream>
 #include "ArvoreVermelhoPreto.h"
 
 using namespace std;
 
+ArvoreVermelhoPreto::ArvoreVermelhoPreto()
+{
+	root = nullptr;
+	numRotacoes = 0;
+	numTrocasDeCor = 0;
+	nosPercorridosBusca = 0;
+	comparacoesNaBusca = 0;
+}
+
 void ArvoreVermelhoPreto::InsertNode(string id) {
-	
+
 	stringstream idBookInt(id);
 	unsigned long long idBook = 0;
 	idBookInt >> idBook;
@@ -25,233 +32,147 @@ void ArvoreVermelhoPreto::InsertNode(string id) {
 		root->info = idBook;
 		root->pai = nullptr;
 		root->cor = "BLACK";
-		cout << "Element inserted.\n";
 	}
-	else {
-		auto linker = GetRoot();
+	else 
+	{
+		NoArvVermPreto *linker = root;
 		NoArvVermPreto* newnode = new NoArvVermPreto();
 		newnode->info = idBook;
 
-		while (linker != nullptr) {
-			if (linker->info > idBook) {
-				if (linker->esq == nullptr) {
+		while (linker != nullptr) 
+		{
+			if (linker->info > idBook) 
+			{
+				if (linker->esq == nullptr) 
+				{
 					linker->esq = newnode;
 					newnode->cor = "RED";
 					newnode->pai = linker;
-					cout << "Element inserted.\n"; break;
+					break;
 				}
-				else { linker = linker->esq; }
+				else 
+					linker = linker->esq; 
 			}
-			else {
-				if (linker->dir == nullptr) {
+			else
+			{
+				if (linker->dir == nullptr) 
+				{
 					linker->dir = newnode;
 					newnode->cor = "RED";
 					newnode->pai = linker;
-					cout << "Element inserted.\n"; break;
+					break;
 				}
-				else { linker = linker->dir; }
+				else
+					linker = linker->dir;
 			}
 		}
 		RB_Insert_Fixup(newnode);
 	}
 }
 
-void ArvoreVermelhoPreto::RB_Insert_Fixup(NoArvVermPreto* z) {
-	while (z->pai->cor == "RED") {
+void ArvoreVermelhoPreto::RB_Insert_Fixup(NoArvVermPreto* z) 
+{
+	while (z->pai->cor == "RED") 
+	{
 		auto grandpai = z->pai->pai;
-		auto uncle = GetRoot();
-		if (z->pai == grandpai->esq) {
-			if (grandpai->dir) { uncle = grandpai->dir; }
-			if (uncle->cor == "RED") {
+		auto uncle = root;
+		if (z->pai == grandpai->esq) 
+		{
+			if (grandpai->dir) 
+				uncle = grandpai->dir;
+			if (uncle->cor == "RED") 
+			{
 				z->pai->cor = "BLACK";
 				uncle->cor = "BLACK";
 				grandpai->cor = "RED";
-				if (grandpai->info != root->info) { z = grandpai; }
-				else { break; }
+				numTrocasDeCor++;
+				if (grandpai->info != root->info) 
+					z = grandpai;
+				else 
+					break;
 			}
 			else if (z == grandpai->esq->dir) {
 				esqRotate(z->pai);
+				numRotacoes++;
 			}
 			else {
 				z->pai->cor = "BLACK";
 				grandpai->cor = "RED";
+				numTrocasDeCor++;
 				dirRotate(grandpai);
-				if (grandpai->info != root->info) { z = grandpai; }
-				else { break; }
+				numRotacoes++;
+				if (grandpai->info != root->info) 
+					z = grandpai;
+				else
+					break;
 			}
 		}
-		else {
-			if (grandpai->esq) { uncle = grandpai->esq; }
-			if (uncle->cor == "RED") {
+		else 
+		{
+			if (grandpai->esq) 
+				uncle = grandpai->esq;
+
+			if (uncle->cor == "RED")
+			{
 				z->pai->cor = "BLACK";
 				uncle->cor = "BLACK";
 				grandpai->cor = "RED";
-				if (grandpai->info != root->info) { z = grandpai; }
-				else { break; }
+				numTrocasDeCor++;
+				if (grandpai->info != root->info)
+					z = grandpai;
+				else
+					break;
 			}
-			else if (z == grandpai->dir->esq) {
+			else if (z == grandpai->dir->esq)
+			{
 				dirRotate(z->pai);
+				numRotacoes++;
 			}
+			
 			else {
 				z->pai->cor = "BLACK";
 				grandpai->cor = "RED";
+				numTrocasDeCor++;
 				esqRotate(grandpai);
-				if (grandpai->info != root->info) { z = grandpai; }
-				else { break; }
+				numRotacoes++;
+				if (grandpai->info != root->info) 
+					z = grandpai;
+				else
+					break;
 			}
 		}
 	}
+
 	root->cor = "BLACK";
 }
 
+NoArvVermPreto* ArvoreVermelhoPreto::TreeSearch(string id) 
+{
+	stringstream idBookInt(id);
+	unsigned long long idBook = 0;
+	idBookInt >> idBook;
 
-void ArvoreVermelhoPreto::RemoveNode(NoArvVermPreto* pai, NoArvVermPreto* curr, int stuff) {
-	if (curr == nullptr) { return; }
-	if (curr->info == stuff) {
-		//CASE -- 1
-		if (curr->esq == nullptr && curr->dir == nullptr) {
-			if (pai->info == curr->info) { root = nullptr; }
-			else if (pai->dir == curr) {
-				RB_Delete_Fixup(curr);
-				pai->dir = nullptr;
-			}
-			else {
-				RB_Delete_Fixup(curr);
-				pai->esq = nullptr;
-			}
-		}
-		//CASE -- 2
-		else if (curr->esq != nullptr && curr->dir == nullptr) {
-			int swap = curr->info;
-			curr->info = curr->esq->info;
-			curr->esq->info = swap;
-			RemoveNode(curr, curr->esq, stuff);
-		}
-		else if (curr->esq == nullptr && curr->dir != nullptr) {
-			int swap = curr->info;
-			curr->info = curr->dir->info;
-			curr->dir->info = swap;
-			RemoveNode(curr, curr->dir, stuff);
-		}
-		//CASE -- 3
-		else {
-			bool flag = false;
-			NoArvVermPreto* temp = curr->dir;
-			while (temp->esq) { flag = true; pai = temp; temp = temp->esq; }
-			if (!flag) { pai = curr; }
-			int swap = curr->info;
-			curr->info = temp->info;
-			temp->info = swap;
-			RemoveNode(pai, temp, swap);
-		}
-	}
-}
+	auto* temp = root;
+	if (temp == nullptr)
+		return nullptr;
 
-void ArvoreVermelhoPreto::Remove(int stuff) {
-	auto temp = root;
-	auto pai = temp;
-	bool flag = false;
-	if (!temp) { RemoveNode(nullptr, nullptr, stuff); }
-
-	while (temp) {
-		if (stuff == temp->info) { flag = true; RemoveNode(pai, temp, stuff); break; }
-		else if (stuff < temp->info) { pai = temp; temp = temp->esq; }
-		else { pai = temp; temp = temp->dir; }
-	}
-
-	if (!flag) { cout << "\nElement doesn't exist in the table"; }
-}
-
-void ArvoreVermelhoPreto::RB_Delete_Fixup(NoArvVermPreto* z) {
-	while (z->info != root->info && z->cor == "BLACK") {
-		auto sibling = GetRoot();
-		if (z->pai->esq == z) {
-			if (z->pai->dir) { sibling = z->pai->dir; }
-			if (sibling) {
-				//CASE -- 1
-				if (sibling->cor == "RED") {
-					sibling->cor = "BLACK";
-					z->pai->cor = "RED";
-					esqRotate(z->pai);
-					sibling = z->pai->dir;
-				}
-				//CASE -- 2
-				if (sibling->esq == nullptr && sibling->dir == nullptr) {
-					sibling->cor = "RED";
-					z = z->pai;
-				}
-				else if (sibling->esq->cor == "BLACK" && sibling->dir->cor == "BLACK") {
-					sibling->cor = "RED";
-					z = z->pai;
-				}
-				//CASE -- 3
-				else if (sibling->dir->cor == "BLACK") {
-					sibling->esq->cor = "BLACK";
-					sibling->cor = "RED";
-					dirRotate(sibling);
-					sibling = z->pai->dir;
-				}
-				else {
-					sibling->cor = z->pai->cor;
-					z->pai->cor = "BLACK";
-					if (sibling->dir) { sibling->dir->cor = "BLACK"; }
-					esqRotate(z->pai);
-					z = root;
-				}
-			}
-		}
-		else {
-			if (z->pai->dir == z) {
-				if (z->pai->esq) { sibling = z->pai->esq; }
-				if (sibling) {
-					//CASE -- 1
-					if (sibling->cor == "RED") {
-						sibling->cor = "BLACK";
-						z->pai->cor = "RED";
-						dirRotate(z->pai);
-						sibling = z->pai->esq;
-					}
-					//CASE -- 2
-					if (sibling->esq == nullptr && sibling->dir == nullptr) {
-						sibling->cor = "RED";
-						z = z->pai;
-					}
-					else if (sibling->esq->cor == "BLACK" && sibling->dir->cor == "BLACK") {
-						sibling->cor = "RED";
-						z = z->pai;
-					}
-					//CASE -- 3 
-					else if (sibling->esq->cor == "BLACK") {
-						sibling->dir->cor = "BLACK";
-						sibling->cor = "RED";
-						dirRotate(sibling);
-						sibling = z->pai->esq;
-					}
-					else {
-						sibling->cor = z->pai->cor;
-						z->pai->cor = "BLACK";
-						if (sibling->esq) { sibling->esq->cor = "BLACK"; }
-						esqRotate(z->pai);
-						z = root;
-					}
-				}
-			}
-
-		}
-	}
-	z->cor = "BLACK";
-}
-
-NoArvVermPreto* ArvoreVermelhoPreto::TreeSearch(unsigned long long stuff) {
-	auto* temp = GetRoot();
-	if (temp == nullptr) { return nullptr; }
-
-	while (temp) {
-		if (stuff == temp->info)
+	while (temp) 
+	{
+		comparacoesNaBusca++;
+		if (idBook == temp->info)
 			return temp;
-		else if (stuff < temp->info) { temp = temp->esq; }
-		else { temp = temp->dir; }
+		else
+		{
+			comparacoesNaBusca++;
+			if (idBook < temp->info)
+				temp = temp->esq;
+			else
+				temp = temp->dir;
+		}
+
+		nosPercorridosBusca++;
 	}
+
 	return nullptr;
 }
 
@@ -293,18 +214,4 @@ void ArvoreVermelhoPreto::dirRotate(NoArvVermPreto* x) {
 	else { x->esq = nullptr; }
 
 	if (x->esq) { x->esq->pai = x; }
-}
-
-void ArvoreVermelhoPreto::PreorderTraversal(NoArvVermPreto* temp) {
-	if (!temp) { return; }
-	cout << "--> " << temp->info << "<" << temp->cor << ">";
-	PreorderTraversal(temp->esq);
-	PreorderTraversal(temp->dir);
-}
-
-void ArvoreVermelhoPreto::ostorderTraversal(NoArvVermPreto* temp) {
-	if (!temp) { return; }
-	PreorderTraversal(temp->esq);
-	PreorderTraversal(temp->dir);
-	cout << "--> " << temp->info << "<" << temp->cor << ">";
 }
