@@ -1,24 +1,26 @@
 #pragma once
-#include "NoArvVermPreto.h"
 #include <string>
+#include "NoArvVermPreto.h"
 
 using namespace std;
 
 class ArvoreVermelhoPreto
 {
+
 public:
     ArvoreVermelhoPreto();
-    NoArvVermPreto* root;
+    NoArvVermPreto* raiz;
+    //Funções
+    void Inserir(string id);
+    void InserirAux(NoArvVermPreto* z);
+    void RotacaoEsquerda(NoArvVermPreto* x);
+    void RotacaoDireita(NoArvVermPreto* x);
+    NoArvVermPreto* BuscaNaArvore(string id);
     //Parametros para a insercao
     int numRotacoes;
     int numTrocasDeCor;
     //Parametros para a busca
-    int nosPercorridosBusca;
-    int comparacoesNaBusca;
-    void InsertNode(string id);
-    void RB_Insert_Fixup(NoArvVermPreto* z);
-    NoArvVermPreto* TreeSearch(string id);
-    void esqRotate(NoArvVermPreto* x);
-    void dirRotate(NoArvVermPreto* x);
+    int numTrocasBusca;
+    int numComparacoesBusca;
 };
 

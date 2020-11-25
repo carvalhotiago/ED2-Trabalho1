@@ -13,205 +13,237 @@ using namespace std;
 
 ArvoreVermelhoPreto::ArvoreVermelhoPreto()
 {
-	root = nullptr;
+	raiz = nullptr;
 	numRotacoes = 0;
 	numTrocasDeCor = 0;
-	nosPercorridosBusca = 0;
-	comparacoesNaBusca = 0;
+	numTrocasBusca = 0;
+	numComparacoesBusca = 0;
 }
 
-void ArvoreVermelhoPreto::InsertNode(string id) {
+
+//Insere um novo no na arvore baseado na string com a chave do livro
+void ArvoreVermelhoPreto::Inserir(string id) {
 
 	stringstream idBookInt(id);
 	unsigned long long idBook = 0;
 	idBookInt >> idBook;
 
-	if (root == nullptr)
+	if (raiz == nullptr)
 	{
-		root = new NoArvVermPreto();
-		root->info = idBook;
-		root->pai = nullptr;
-		root->cor = "BLACK";
+		raiz = new NoArvVermPreto();
+		raiz->info = idBook;
+		raiz->pai = nullptr;
+		raiz->cor = "PRETO";
 	}
-	else 
+	else
 	{
-		NoArvVermPreto *linker = root;
-		NoArvVermPreto* newnode = new NoArvVermPreto();
-		newnode->info = idBook;
+		NoArvVermPreto* noAux = raiz;
+		NoArvVermPreto* noInsert = new NoArvVermPreto();
 
-		while (linker != nullptr) 
+		noInsert->info = idBook;
+
+		while (noAux != nullptr)
 		{
-			if (linker->info > idBook) 
+			if (noAux->info > idBook)
 			{
-				if (linker->esq == nullptr) 
+				if (noAux->esq == nullptr)
 				{
-					linker->esq = newnode;
-					newnode->cor = "RED";
-					newnode->pai = linker;
+					noAux->esq = noInsert;
+					noInsert->cor = "VERMELHO";
+					noInsert->pai = noAux;
 					break;
 				}
-				else 
-					linker = linker->esq; 
+				else
+					noAux = noAux->esq;
 			}
 			else
 			{
-				if (linker->dir == nullptr) 
+				if (noAux->dir == nullptr)
 				{
-					linker->dir = newnode;
-					newnode->cor = "RED";
-					newnode->pai = linker;
+					noAux->dir = noInsert;
+					noInsert->cor = "VERMELHO";
+					noInsert->pai = noAux;
 					break;
 				}
 				else
-					linker = linker->dir;
+					noAux = noAux->dir;
 			}
 		}
-		RB_Insert_Fixup(newnode);
+
+		InserirAux(noInsert);
 	}
 }
 
-void ArvoreVermelhoPreto::RB_Insert_Fixup(NoArvVermPreto* z) 
+//Função auxiliar para balanceamento da árvore durante a inserção
+void ArvoreVermelhoPreto::InserirAux(NoArvVermPreto* no)
 {
-	while (z->pai->cor == "RED") 
+	while (no->pai->cor == "VERMELHO")
 	{
-		auto grandpai = z->pai->pai;
-		auto uncle = root;
-		if (z->pai == grandpai->esq) 
+		NoArvVermPreto* noAvo = no->pai->pai;
+		NoArvVermPreto* noAux = raiz;
+
+		if (no->pai == noAvo->esq)
 		{
-			if (grandpai->dir) 
-				uncle = grandpai->dir;
-			if (uncle->cor == "RED") 
+			if (noAvo->dir)
+				noAux = noAvo->dir;
+			if (noAux->cor == "VERMELHO")
 			{
-				z->pai->cor = "BLACK";
-				uncle->cor = "BLACK";
-				grandpai->cor = "RED";
+				no->pai->cor = "PRETO";
+				noAux->cor = "PRETO";
+				noAvo->cor = "VERMELHO";
 				numTrocasDeCor++;
-				if (grandpai->info != root->info) 
-					z = grandpai;
-				else 
+				if (noAvo->info != raiz->info)
+					no = noAvo;
+				else
 					break;
 			}
-			else if (z == grandpai->esq->dir) {
-				esqRotate(z->pai);
+			else if (no == noAvo->esq->dir) {
+				RotacaoEsquerda(no->pai);
 				numRotacoes++;
 			}
 			else {
-				z->pai->cor = "BLACK";
-				grandpai->cor = "RED";
+				no->pai->cor = "PRETO";
+				noAvo->cor = "VERMELHO";
 				numTrocasDeCor++;
-				dirRotate(grandpai);
+				RotacaoDireita(noAvo);
 				numRotacoes++;
-				if (grandpai->info != root->info) 
-					z = grandpai;
+				if (noAvo->info != raiz->info)
+					no = noAvo;
 				else
 					break;
 			}
 		}
-		else 
-		{
-			if (grandpai->esq) 
-				uncle = grandpai->esq;
-
-			if (uncle->cor == "RED")
-			{
-				z->pai->cor = "BLACK";
-				uncle->cor = "BLACK";
-				grandpai->cor = "RED";
-				numTrocasDeCor++;
-				if (grandpai->info != root->info)
-					z = grandpai;
-				else
-					break;
-			}
-			else if (z == grandpai->dir->esq)
-			{
-				dirRotate(z->pai);
-				numRotacoes++;
-			}
-			
-			else {
-				z->pai->cor = "BLACK";
-				grandpai->cor = "RED";
-				numTrocasDeCor++;
-				esqRotate(grandpai);
-				numRotacoes++;
-				if (grandpai->info != root->info) 
-					z = grandpai;
-				else
-					break;
-			}
-		}
-	}
-
-	root->cor = "BLACK";
-}
-
-NoArvVermPreto* ArvoreVermelhoPreto::TreeSearch(string id) 
-{
-	stringstream idBookInt(id);
-	unsigned long long idBook = 0;
-	idBookInt >> idBook;
-
-	auto* temp = root;
-	if (temp == nullptr)
-		return nullptr;
-
-	while (temp) 
-	{
-		comparacoesNaBusca++;
-		if (idBook == temp->info)
-			return temp;
 		else
 		{
-			comparacoesNaBusca++;
-			if (idBook < temp->info)
-				temp = temp->esq;
+			if (noAvo->esq)
+				noAux = noAvo->esq;
+
+			if (noAux->cor == "VERMELHO")
+			{
+				no->pai->cor = "PRETO";
+				noAux->cor = "PRETO";
+				noAvo->cor = "VERMELHO";
+				numTrocasDeCor++;
+				if (noAvo->info != raiz->info)
+					no = noAvo;
+				else
+					break;
+			}
+			else if ((noAvo->dir) && no == noAvo->dir->esq)
+			{
+				RotacaoDireita(no->pai);
+				numRotacoes++;
+			}
+
 			else
-				temp = temp->dir;
+			{
+				no->pai->cor = "PRETO";
+				noAvo->cor = "VERMELHO";
+				numTrocasDeCor++;
+				RotacaoEsquerda(noAvo);
+				numRotacoes++;
+				if (noAvo->info != raiz->info)
+					no = noAvo;
+				else
+					break;
+			}
+		}
+	}
+
+	raiz->cor = "PRETO";
+}
+
+//Função para realizar a busca dentro da árvore
+NoArvVermPreto* ArvoreVermelhoPreto::BuscaNaArvore(string id)
+{
+	stringstream idBookInt(id);
+	unsigned long long idBook = 0;
+	idBookInt >> idBook;
+
+	NoArvVermPreto* noAux = raiz;
+	if (noAux == nullptr)
+		return nullptr;
+
+	while (noAux)
+	{
+		numComparacoesBusca++;
+		if (idBook == noAux->info)
+			return noAux;
+		else
+		{
+			numComparacoesBusca++;
+			if (idBook < noAux->info)
+				noAux = noAux->esq;
+			else
+				noAux = noAux->dir;
 		}
 
-		nosPercorridosBusca++;
+		numTrocasBusca++;
 	}
 
 	return nullptr;
 }
 
-void ArvoreVermelhoPreto::esqRotate(NoArvVermPreto* x) {
-	NoArvVermPreto* nw_node = new NoArvVermPreto();
-	if (x->dir->esq) { nw_node->dir = x->dir->esq; }
-	nw_node->esq = x->esq;
-	nw_node->info = x->info;
-	nw_node->cor = x->cor;
-	x->info = x->dir->info;
-	x->cor = x->dir->cor;
-	x->esq = nw_node;
-	if (nw_node->esq) { nw_node->esq->pai = nw_node; }
-	if (nw_node->dir) { nw_node->dir->pai = nw_node; }
-	nw_node->pai = x;
+//Função que faz a rotação a esquerda durante o balanceamento
+void ArvoreVermelhoPreto::RotacaoEsquerda(NoArvVermPreto* no)
+{
+	NoArvVermPreto* noAux = new NoArvVermPreto();
 
-	if (x->dir->dir) { x->dir = x->dir->dir; }
-	else { x->dir = nullptr; }
+	if (no->dir->esq)
+		noAux->dir = no->dir->esq;
 
-	if (x->dir) { x->dir->pai = x; }
+	noAux->esq = no->esq;
+	noAux->info = no->info;
+	noAux->cor = no->cor;
+	
+	no->info = no->dir->info;
+	no->cor = no->dir->cor;
+	no->esq = noAux;
+
+	if (noAux->esq)
+		noAux->esq->pai = noAux;
+	if (noAux->dir)
+		noAux->dir->pai = noAux;
+
+	noAux->pai = no;
+
+	if (no->dir->dir)
+		no->dir = no->dir->dir;
+	else
+		no->dir = nullptr;
+
+	if (no->dir)
+		no->dir->pai = no;
 }
 
-void ArvoreVermelhoPreto::dirRotate(NoArvVermPreto* x) {
-	NoArvVermPreto* nw_node = new NoArvVermPreto();
-	if (x->esq->dir) { nw_node->esq = x->esq->dir; }
-	nw_node->dir = x->dir;
-	nw_node->info = x->info;
-	nw_node->cor = x->cor;
+//Função que faz a rotação a direita durante o balanceamento
+void ArvoreVermelhoPreto::RotacaoDireita(NoArvVermPreto* no)
+{
+	NoArvVermPreto* noAux = new NoArvVermPreto();
 
-	x->info = x->esq->info;
-	x->cor = x->esq->cor;
+	if (no->esq->dir)
+		noAux->esq = no->esq->dir;
 
-	x->dir = nw_node;
-	if (nw_node->esq) { nw_node->esq->pai = nw_node; }
-	if (nw_node->dir) { nw_node->dir->pai = nw_node; }
-	nw_node->pai = x;
+	noAux->dir = no->dir;
+	noAux->info = no->info;
+	noAux->cor = no->cor;
 
-	if (x->esq->esq) { x->esq = x->esq->esq; }
-	else { x->esq = nullptr; }
+	no->info = no->esq->info;
+	no->cor = no->esq->cor;
+	no->dir = noAux;
 
-	if (x->esq) { x->esq->pai = x; }
+	if (noAux->esq)
+		noAux->esq->pai = noAux;
+	if (noAux->dir)
+		noAux->dir->pai = noAux;
+
+	noAux->pai = no;
+
+	if (no->esq->esq)
+		no->esq = no->esq->esq;
+	else
+		no->esq = nullptr;
+
+	if (no->esq)
+		no->esq->pai = no;
 }
