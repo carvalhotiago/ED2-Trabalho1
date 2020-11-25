@@ -2,7 +2,8 @@
 
 NoArvB::NoArvB()
 {
+	isFolha = 1;
 	nodesNumber = 0;
-	keys = new vector<unsigned long long >;
 	nosFilhos = new vector<NoArvB*>;
+	keys = new vector<unsigned long long >;
 }

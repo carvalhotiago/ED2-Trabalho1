@@ -8,9 +8,9 @@ class NoArvB
 {
 public:
 	NoArvB();
-	vector<unsigned long long > *keys;
 	int isFolha;
 	int nodesNumber;
 	vector<NoArvB*> *nosFilhos;
+	vector<unsigned long long > *keys;
 };
 
