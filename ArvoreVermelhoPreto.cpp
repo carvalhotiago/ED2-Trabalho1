@@ -101,7 +101,8 @@ void ArvoreVermelhoPreto::InserirAux(NoArvVermPreto* no)
 				RotacaoEsquerda(no->pai);
 				numRotacoes++;
 			}
-			else {
+			else 
+			{
 				no->pai->cor = "PRETO";
 				noAvo->cor = "VERMELHO";
 				numTrocasDeCor++;
@@ -134,7 +135,6 @@ void ArvoreVermelhoPreto::InserirAux(NoArvVermPreto* no)
 				RotacaoDireita(no->pai);
 				numRotacoes++;
 			}
-
 			else
 			{
 				no->pai->cor = "PRETO";
