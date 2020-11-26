@@ -104,7 +104,7 @@ int main()
 
 	//Abre arquivo de saida, que irá armazenar estatísticas do desempenho de toda a execução
 	ofstream saida;
-	saida.open("saida-500k.txt");
+	saida.open("saida.txt");
 	if (saida.is_open())
 		cout << "Arquivo saida aberto com sucesso." << endl;
 	else
@@ -227,33 +227,39 @@ int main()
 			delete registro;
 		}
 
+		auto inicioUpdate = Clock::now();
 		UpdateAuthorsTable(authorsHashTable);
-
 		auto t2 = Clock::now();
+
+		long tempoUpdate = chrono::duration_cast<std::chrono::seconds>(t2 - inicioUpdate).count();
 		long tempo = chrono::duration_cast<std::chrono::seconds>(t2 - t1).count();
 
 		saida << "Execucao com N = " << N << endl;
 		saida << "Tempo total: " << tempo << "(s)\n";
+		saida << "Tempo update: " << tempoUpdate << "(s) -- media de " << (float)tempoUpdate/N << "(s) por livro\n";
+		saida << "Numero de colisoes - livros: " << booksHashTable->GetNumeroDeColisoes() << endl;
+		saida << "Numero de colisoes - autores: " << authorsHashTable->GetNumeroDeColisoes() << endl;
 
 		cout << endl;
 
 		auto inicioQuickSort = Clock::now();
 		auto autoresOrdenados = authorsHashTable->GetListaDeAutoresOrdenadaPorAppearances();
 		auto fimQuickSort = Clock::now();
+
 		long tempoQuickSort = chrono::duration_cast<std::chrono::milliseconds>(fimQuickSort - inicioQuickSort).count();
 		saida << "Tempo para ordenacao dos autores com QuickSort: " << tempoQuickSort << "(ms)\n\n";
-
 
 		for (int i = autoresOrdenados->size() - 1; i >= 0; i--)
 		{
 			auto author = autoresOrdenados->at(i);
 			if (author->authorName.empty() || author->authorName == "vazio" || author->authorName == " ")
 				i--;
-			else if (author->appearances > 3) {
+			else if (author->appearances > 3) { // printando apenas os que tem mais que 3 appearances para nao "poluir" muito o arquivo de saida
 				cout << autoresOrdenados->size() - i << ": " << author->authorName << " - " << author->appearances << endl;
 				saida << autoresOrdenados->size()-i << ": " << author->authorName << " - " << author->appearances << endl;
 			}
 		}
+		cout << "Numero de colisoes: " << booksHashTable->GetNumeroDeColisoes() << endl;
 
 		arquivo.seekg(0, arquivo.beg);
 		arquivo.close();

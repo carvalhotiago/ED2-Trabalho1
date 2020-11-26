@@ -21,19 +21,26 @@ int BooksHashTable::HashFunction(int key)
 
 bool BooksHashTable::Insert(Book* book)
 {
+	//pegando apenas os 6 primeiros digitos do campo isbn, que ja sao suficientes para fazer o hash
 	string x = book->isbn10.substr(0, 6);
+
+	//caso nao seja possivel fazer a conversao do isbn10 por algum motivo, o valor padrao de Key fara com que o elemento seja alocado na ultima entrada da tabela
 	int key = tableSize-1;
 	try
 	{
-		key = stoi(x); //nao peguei o isbn10 inteiro pq as vezes nao cabe em INT
+		key = stoi(x);
 	}
-	catch (const std::exception& ex) //devido ao formato do dataset ser diferente, pode ser que o campo isbn10 venha vazio pois no novo formato ele corresponde ao campo dimension-y e nao eh sempre que esse campo vem preenchido
+	catch (const std::exception& ex) 
 	{
 		cout << ex.what() << '\n';
 	}
+
 	int hash = HashFunction(key);
+
+	//como estamos trabalhando com enderecamento aberto com listas encadeadas, cada hashing nos fornece uma outra lista de entradas que possuem o mesmo hash
 	vector<Book*>* row = this->hashTable.at(hash);
 
+	//se for repetido, retorna false e nao insere
 	if (VerificaLivroRepetido(book, row)) {
 		row->push_back(book);
 		return true;
@@ -58,7 +65,7 @@ int BooksHashTable::GetNumeroDeColisoes()
 	int numeroDeColisoes = 0;
 	for (vector<Book*>* row : this->hashTable)
 	{
-		if (row->size() > 1)		//Se uma linha tem mais de 1 registro, eh pq houve colis�o
+		if (row->size() > 1)		//Se uma linha tem mais de 1 registro, eh pq houve colisao
 			numeroDeColisoes += row->size() - 1;
 	}
 	return numeroDeColisoes;
